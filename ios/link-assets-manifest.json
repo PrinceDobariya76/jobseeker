@@ -1,0 +1,141 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/AntDesign.ttf",
+      "sha1": "4e77868439280fb434d4697c7b911271406c81f3"
+    },
+    {
+      "path": "assets/fonts/Entypo.ttf",
+      "sha1": "12b5670eb178138f77285d5f2c246d3cc5fa67d6"
+    },
+    {
+      "path": "assets/fonts/EvilIcons.ttf",
+      "sha1": "91d377ea3cf47490b256c2ed081704a7dabdae0c"
+    },
+    {
+      "path": "assets/fonts/Feather.ttf",
+      "sha1": "e6604258b1ced5efd51360875d782fca65381d47"
+    },
+    {
+      "path": "assets/fonts/FontAwesome.ttf",
+      "sha1": "13b1eab65a983c7a73bc7997c479d66943f7c6cb"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Brands.ttf",
+      "sha1": "3fa2d67cef22da5c3f3eb5730c6afbd6fecf0372"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Regular.ttf",
+      "sha1": "7d849a3981a716e2ba4a84634bc57d0b8054a6a3"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Solid.ttf",
+      "sha1": "c1b9fae262f42868c075ac865a8ab34920e20a2c"
+    },
+    {
+      "path": "assets/fonts/Fontisto.ttf",
+      "sha1": "c090a3ec96a3f1bb9b615c2f3f204ce0dcdcdbc3"
+    },
+    {
+      "path": "assets/fonts/Foundation.ttf",
+      "sha1": "4b2bce6c792493a4a5716b6fec2dbefe89492c3f"
+    },
+    {
+      "path": "assets/fonts/Ionicons.ttf",
+      "sha1": "b5281fbfa43129abc3e412dd938cfcf0b77de999"
+    },
+    {
+      "path": "assets/fonts/MaterialCommunityIcons.ttf",
+      "sha1": "4c2a838b00dbb5e8bb1b368fce0de534e8eb241c"
+    },
+    {
+      "path": "assets/fonts/MaterialIcons.ttf",
+      "sha1": "1943803d652750c8ec60415f1e57401c70e72d25"
+    },
+    {
+      "path": "assets/fonts/NotoSerif-Bold.ttf",
+      "sha1": "0ac1af0607337223d4514685289f07815f573564"
+    },
+    {
+      "path": "assets/fonts/NotoSerif-BoldItalic.ttf",
+      "sha1": "1aa07f8aece2709fc935bec4bb924ebfcaca55d9"
+    },
+    {
+      "path": "assets/fonts/NotoSerif-Italic.ttf",
+      "sha1": "43922a075458e4328bf5a72c1da7b2bbb3b2f0e5"
+    },
+    {
+      "path": "assets/fonts/NotoSerif-Regular.ttf",
+      "sha1": "3f15509c797a957769316e054c4f7f43ef1d9563"
+    },
+    {
+      "path": "assets/fonts/Roboto-Bold.ttf",
+      "sha1": "62442a18a9fe9457c1afeabf683d263a691b7798"
+    },
+    {
+      "path": "assets/fonts/Roboto-Light.ttf",
+      "sha1": "18788c5d630fa695f9283f6393bfa541b2031508"
+    },
+    {
+      "path": "assets/fonts/Roboto-Medium.ttf",
+      "sha1": "3c6a09fcc6a454924c81af7dff94fc6d399ed79b"
+    },
+    {
+      "path": "assets/fonts/Roboto-Regular.ttf",
+      "sha1": "56c5c0d38bde4c1f1549dda43db37b09c608aad3"
+    },
+    {
+      "path": "assets/fonts/Roboto-Thin.ttf",
+      "sha1": "58c733e22bceeaf9609ce578eca92ac303c6d92f"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Black.otf",
+      "sha1": "d92baad4dab9ca55bc72f1a8a0a6de72829e709f"
+    },
+    {
+      "path": "assets/fonts/Satoshi-BlackItalic.otf",
+      "sha1": "2fada5e2f31f7e2f252d458094603daca66f4a0a"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Bold.otf",
+      "sha1": "57a9e1c24984708865f7d0c31a03773912fb975f"
+    },
+    {
+      "path": "assets/fonts/Satoshi-BoldItalic.otf",
+      "sha1": "c279f41805b46f030eb4a1d55ceaf7c4cacd1a39"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Italic.otf",
+      "sha1": "1ee38a9969b628781bc30ed690f6571aca189451"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Light.otf",
+      "sha1": "3b1b977f00db442bdf30f63603112e6e251b7dda"
+    },
+    {
+      "path": "assets/fonts/Satoshi-LightItalic.otf",
+      "sha1": "782b6239e9a537ffcd574fb26b69201b67b96dc2"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Medium.otf",
+      "sha1": "704faccb5fff19f25c0b914d42d135ab75794a24"
+    },
+    {
+      "path": "assets/fonts/Satoshi-MediumItalic.otf",
+      "sha1": "89936e7345cfa18dadc048e3a9266947c7f12839"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Regular.otf",
+      "sha1": "7dcb59994f2bee1a4ef1f6c079ba0e99b409878b"
+    },
+    {
+      "path": "assets/fonts/SimpleLineIcons.ttf",
+      "sha1": "9ffb81a5a11112e292f2cc323e98486bad597599"
+    },
+    {
+      "path": "assets/fonts/Zocial.ttf",
+      "sha1": "6a48a962b06cc3acbdfd61df0d9a34744eea5e8d"
+    }
+  ]
+}

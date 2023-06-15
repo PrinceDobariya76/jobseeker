@@ -1,0 +1,13 @@
+{
+  "git.confirmSync": false,
+  "workbench.activityBar.visible": true,
+  "editor.wordWrap": "on",
+  "workbench.iconTheme": "vscode-icons",
+  "window.menuBarVisibility": "default",
+  "vsicons.projectDetection.autoReload": true,
+  "files.eol": "\n",
+  "editor.renderWhitespace": "all",
+  "code-eol.newlineCharacter": "¬",
+  "code-eol.returnCharacter": "¤",
+  "code-eol.crlfCharacter": "¤¬"
+}

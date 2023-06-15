@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "338055406961",
+    "project_id": "shiftablejobseeker",
+    "storage_bucket": "shiftablejobseeker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338055406961:android:50a736f6237878c15402d0",
+        "android_client_info": {
+          "package_name": "com.ShiftableJobSeeker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338055406961-j1m2piru70gake52e4c109c2spmh353j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXRxRRazHlZcpkx3iDiw2qDqcs4zv88VI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338055406961-j1m2piru70gake52e4c109c2spmh353j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "338055406961-2j8loeink968krtr5a14adhoefrs5epk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.ShiftableJobSeeker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
