@@ -105,6 +105,7 @@
 		C4F88B61A32B3507117E19F5 /* Pods_ShiftableJobSeeker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShiftableJobSeeker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8DE4278E3A945649B2C50A8 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
 		CB124D6350E04D88B99F1C43 /* Satoshi-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-BoldItalic.otf"; path = "../assets/fonts/Satoshi-BoldItalic.otf"; sourceTree = "<group>"; };
+		D3CC77EB2A3CD1A00039C56F /* ShiftableJobSeeker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ShiftableJobSeeker.entitlements; path = ShiftableJobSeeker/ShiftableJobSeeker.entitlements; sourceTree = "<group>"; };
 		D4824BC9BFB54939800EE771 /* NotoSerif-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSerif-Regular.ttf"; path = "../assets/fonts/NotoSerif-Regular.ttf"; sourceTree = "<group>"; };
 		D595BEA80C214CA89FE7EF2D /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
 		DD9AED93CB2D484AB685E195 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = ../assets/fonts/Ionicons.ttf; sourceTree = "<group>"; };
@@ -158,6 +159,7 @@
 		13B07FAE1A68108700A75B9A /* ShiftableJobSeeker */ = {
 			isa = PBXGroup;
 			children = (
+				D3CC77EB2A3CD1A00039C56F /* ShiftableJobSeeker.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -653,7 +655,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CODE_SIGN_ENTITLEMENTS = ShiftableJobSeeker/ShiftableJobSeeker.entitlements;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = PH243278PD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ShiftableJobSeeker/Info.plist;
@@ -681,7 +684,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CODE_SIGN_ENTITLEMENTS = ShiftableJobSeeker/ShiftableJobSeeker.entitlements;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = PH243278PD;
 				INFOPLIST_FILE = ShiftableJobSeeker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
