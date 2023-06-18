@@ -1,35 +1,32 @@
-/* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import Colors from '../theme/Colors';
-import AuthHeader from '../Component/AuthComponent/AuthHeader';
-import { moderateScale } from '../theme/scalling';
-import { Fonts } from '../theme';
-import SigningTextInpute from '../Component/AuthComponent/SigningTextInpute';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Icons } from '../theme/icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import makeAPIRequest from '../helper/global';
-import { GET, POST, apiConst } from '../helper/apiConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { errorMessage, validateEmail } from '../helper/constant';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import AcitvityLoaer from '../Component/HomeComponent/ActivityLoader';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import React, {useEffect, useState} from 'react';
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AuthHeader from '../Component/AuthComponent/AuthHeader';
+import SigningTextInpute from '../Component/AuthComponent/SigningTextInpute';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
-import axios from 'axios';
+import {apiConst, GET, POST} from '../helper/apiConstants';
+import {errorMessage, validateEmail} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {Icons} from '../theme/icons';
+import {moderateScale} from '../theme/scalling';
 
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const navigationHomeStack = async () => {
     navigation.navigate('Profile');
   };
@@ -53,11 +50,11 @@ const Login = ({ navigation }) => {
 
   const onGetStartedPress = async () => {
     if (userName == '') {
-      errorMessage({ message: 'Please enter Email ' });
+      errorMessage({message: 'Please enter Email '});
     } else if (!validateEmail(userName)) {
-      errorMessage({ message: 'Please enter valid Email ' });
+      errorMessage({message: 'Please enter valid Email '});
     } else if (password == '') {
-      errorMessage({ message: 'Please enter Passowrd' });
+      errorMessage({message: 'Please enter Passowrd'});
     } else {
       setLoading(true);
       let fcmToken = await AsyncStorage.getItem('deviceToken');
@@ -67,7 +64,6 @@ const Login = ({ navigation }) => {
         password: password,
         role: 'applicant',
         fcmToken: fcmToken ?? 'fcmToken',
-
       };
       return makeAPIRequest({
         method: POST,
@@ -87,7 +83,7 @@ const Login = ({ navigation }) => {
               setLoading(false);
               console.log('response.data', response.data);
               if (response.data.data.name == null) {
-                navigation.navigate('EditProfile', { isNew: true });
+                navigation.navigate('EditProfile', {isNew: true});
               } else {
                 navigation.navigate('DentalStaffTab');
               }
@@ -96,16 +92,16 @@ const Login = ({ navigation }) => {
         })
         .catch(error => {
           setLoading(false);
-          errorMessage({ message: error.response.data.errors.error });
+          errorMessage({message: error.response.data.errors.error});
         });
     }
   };
 
   const onForgetPasswordPress = async () => {
     if (userName == '') {
-      errorMessage({ message: 'Please enter Email ' });
+      errorMessage({message: 'Please enter Email '});
     } else if (!validateEmail(userName)) {
-      errorMessage({ message: 'Please enter valid Email ' });
+      errorMessage({message: 'Please enter valid Email '});
     } else {
       setLoading(true);
       let data = {
@@ -131,7 +127,7 @@ const Login = ({ navigation }) => {
   };
 
   const onPressGoogleIcon = async () => {
-    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
 
     const userInfo = await GoogleSignin.signIn();
 
@@ -143,7 +139,6 @@ const Login = ({ navigation }) => {
       googleId: userInfo.user.id,
       role: 'applicant',
       fcmToken: fcmToken ?? 'fcmToken',
-
     };
 
     return makeAPIRequest({
@@ -154,11 +149,11 @@ const Login = ({ navigation }) => {
       .then(async response => {
         console.log('token', response.data.data.jwt.token);
         AsyncStorage.setItem('token', response.data.data.jwt.token);
-        navigation.navigate('EditProfile', { isNew: true });
+        navigation.navigate('EditProfile', {isNew: true});
       })
       .catch(error => {
         setLoading(false);
-        errorMessage({ message: error.response.data.errors.error });
+        errorMessage({message: error.response.data.errors.error});
       });
   };
 
@@ -169,14 +164,14 @@ const Login = ({ navigation }) => {
         <AuthHeader />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1, marginHorizontal: moderateScale(16) }}>
+          style={{flex: 1, marginHorizontal: moderateScale(16)}}>
           <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}
             accessible={false}>
             <ScrollView
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{ padding: moderateScale(20) }}>
+              <View style={{padding: moderateScale(20)}}>
                 <Text style={styles.enter_credential_text}>
                   Enter your credentials
                 </Text>
@@ -184,7 +179,7 @@ const Login = ({ navigation }) => {
                   Or create new ones, our system will guide you.
                 </Text>
                 <View style={styles.inpute_view}>
-                  <Text style={{ color: Colors.black }}>Username</Text>
+                  <Text style={{color: Colors.black}}>Username</Text>
                   <SigningTextInpute
                     value={userName}
                     placeholderText={'Enter name here...'}
@@ -197,7 +192,7 @@ const Login = ({ navigation }) => {
                   />
                 </View>
                 <View style={styles.inpute_view}>
-                  <Text style={{ color: Colors.black }}>Password</Text>
+                  <Text style={{color: Colors.black}}>Password</Text>
                   <SigningTextInpute
                     value={password}
                     placeholderText={'Enter password here...'}
@@ -222,10 +217,10 @@ const Login = ({ navigation }) => {
                     name="arrow-right"
                     size={20}
                     color={Colors.white}
-                  // style={{marginTop: 4}}
+                    // style={{marginTop: 4}}
                   />
                 </TouchableOpacity>
-                <Text style={[styles.description_text, { textAlign: 'center' }]}>
+                <Text style={[styles.description_text, {textAlign: 'center'}]}>
                   or
                 </Text>
                 <TouchableOpacity
@@ -237,7 +232,7 @@ const Login = ({ navigation }) => {
                     },
                   ]}
                   onPress={onPressGoogleIcon}>
-                  <Text style={[styles.getStarted_text, { color: Colors.black }]}>
+                  <Text style={[styles.getStarted_text, {color: Colors.black}]}>
                     Enter With Google
                   </Text>
                   <Image source={Icons.Google} style={styles.google_image} />

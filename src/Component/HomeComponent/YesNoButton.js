@@ -31,6 +31,7 @@ const YesNoButton = props => {
       <View style={{flex: 0.1}}></View>
       <TouchableOpacity
         onPress={() => props.second_button_call()}
+        disabled={props.second_button_disable}
         style={[
           styles.review_modal_button_style,
           {

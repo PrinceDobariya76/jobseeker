@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -7,48 +10,37 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Colors from '../theme/Colors';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Fonts} from '../theme';
-import MainHeader from '../Component/HomeComponent/MainHeader';
-import {Icons} from '../theme/icons';
-import {Images} from '../theme/images';
-import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
-import {GraduationYear, profession} from '../theme/ConstantArray';
-import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
-import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
-import SimpleButton from '../Component/HomeComponent/SimpleButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import YesNoButton from '../Component/HomeComponent/YesNoButton';
-import makeAPIRequest from '../helper/global';
-import {GET, POST, apiConst} from '../helper/apiConstants';
-import {useIsFocused} from '@react-navigation/native';
-import moment from 'moment';
-import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ConformationModal from '../Component/HomeComponent/ConformationModal';
+import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
+import MainHeader from '../Component/HomeComponent/MainHeader';
+import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
+import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
+import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {apiConst, GET, POST} from '../helper/apiConstants';
+import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {profession} from '../theme/ConstantArray';
+import {Icons} from '../theme/icons';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
 const MyProfile = ({navigation}) => {
+  const [userDetail, setUserDetail] = useState({});
   const [selectedProfession, setSelectedProfession] = useState({
-    name: userDetail ? userDetail.education : '',
+    name: '',
     _id: '',
   });
-
+  const [graduationYear, setGraduationYear] = useState({name: '', _id: ''});
+  console.log(selectedProfession, 'selectedProfession');
   const [openProfessionModal, setOpenProfessionModal] = useState(false);
   const [openGraduationYearModal, setOpenGraduationYearModal] = useState(false);
-  const [graduationYear, setGraduationYear] = useState({name: '', _id: ''});
-  const [selectRange, setSelectRange] = useState(
-    userDetail
-      ? userDetail.travelDistance == null
-        ? 0
-        : userDetail.travelDistance
-      : 0,
-  );
+  const [selectRange, setSelectRange] = useState(0);
   const [year, setYear] = useState(
     userDetail ? userDetail.yearOfGraduation : null,
   );
-  const [userDetail, setUserDetail] = useState({});
   const [mainLoading, setMainLoading] = useState(false);
   const [openConfirmationModalLogOut, SetOpenConfirmationModalLogOut] =
     useState(false);
@@ -66,6 +58,15 @@ const MyProfile = ({navigation}) => {
         setMainLoading(false);
         console.log('response', response.data);
         setUserDetail(response.data.data);
+        setSelectedProfession({
+          name: response?.data?.data?.education ?? '',
+          _id: '',
+        });
+        setGraduationYear({
+          name: response?.data?.data?.yearOfGraduation ?? '',
+          _id: '',
+        });
+        setSelectRange(Number(response?.data?.data?.travelDistance) ?? 0);
       })
       .catch(error => {
         setMainLoading(false);
@@ -132,9 +133,9 @@ const MyProfile = ({navigation}) => {
       latitude: response.lat,
       longitude: response.lng,
     });
-    if (selectedProfession._id == '') {
+    if (selectedProfession.name == '') {
       errorMessage({message: 'Please select profession '});
-    } else if (graduationYear._id == '') {
+    } else if (graduationYear.name == '') {
       errorMessage({message: 'Please select year of graguation '});
     } else if (selectRange == 0) {
       errorMessage({message: 'Please set radius from pincode '});
@@ -207,7 +208,15 @@ const MyProfile = ({navigation}) => {
               style={styles.editButton}>
               <Image source={Icons.edit} style={styles.edit_image} />
             </TouchableOpacity>
-            <Image source={Icons.userDefault} style={styles.profile_image} />
+            <Image
+              source={
+                userDetail?.avatar
+                  ? {uri: userDetail?.avatar}
+                  : Icons.userDefault
+              }
+              resizeMode={'contain'}
+              style={styles.profile_image}
+            />
             <Text style={styles.user_name}>{userDetail.name}</Text>
             <View style={styles.gender_view}>
               <Image source={Icons.GenderIcon} style={styles.gender_icon} />

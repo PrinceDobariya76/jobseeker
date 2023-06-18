@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-lone-blocks */
 import React, {useMemo, useState, useEffect} from 'react';
 import {
   Text,
@@ -30,12 +32,12 @@ const Jobs = ({navigation}) => {
   const [selectButton, setSelectButton] = useState(1);
   const initDate = '2023-02-26';
   const [selected, setSelected] = useState(initDate);
-  const [day, setDay] = useState('26');
-  const [month, setMonth] = useState('February');
-  const [year, setYear] = useState('2023');
+  // const [day, setDay] = useState('26');
+  // const [month, setMonth] = useState('February');
+  // const [year, setYear] = useState('2023');
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
-  const [jobData, setJobData] = useState(JobList);
+  // const [jobData, setJobData] = useState(JobList);
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
@@ -58,15 +60,16 @@ const Jobs = ({navigation}) => {
   const [pageCountAppliedJob, setPageCountAppliedJob] = useState(true);
   const [mainLoading, setMainLoading] = useState(false);
 
-  const marked = useMemo(
-    () => ({
-      [selected]: {
-        selected: true,
-        selectedColor: Colors.yellow[400],
-      },
-    }),
-    [selected],
-  );
+  // const marked = useMemo(
+  //   () => ({
+  //     [selected]: {
+  //       selected: true,
+  //       selectedColor: Colors.yellow[400],
+  //     },
+  //   }),
+  //   [selected],
+  // );
+
   const showDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -321,6 +324,7 @@ const Jobs = ({navigation}) => {
           />
         </View>
         {selectButton === 1 ? (
+          // Open Jobs Top Tab
           <FlatList
             // data={jobData}
             data={Data}
@@ -351,6 +355,7 @@ const Jobs = ({navigation}) => {
             onMomentumScrollBegin={() => setOnEndReachedCalled(false)}
           />
         ) : (
+          // Applied Jobs Top Tab
           <FlatList
             // data={jobData}
             data={applyData}

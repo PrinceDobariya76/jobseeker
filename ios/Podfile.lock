@@ -498,7 +498,7 @@ PODS:
     - TOCropViewController
   - RNPermissions (3.8.0):
     - React-Core
-  - RNScreens (3.20.0):
+  - RNScreens (3.21.0):
     - React-Core
     - React-RCTImage
   - TOCropViewController (2.6.1)
@@ -755,10 +755,10 @@ SPEC CHECKSUMS:
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNImageCropPicker: 14fe1c29298fb4018f3186f455c475ab107da332
   RNPermissions: 3dae5a683e39cb7031dd771a434788008ac1cfbb
-  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNScreens: d037903436160a4b039d32606668350d2a808806
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 79dd7410de6f8ad73a77c868d3d368843f0c93e0
 
 PODFILE CHECKSUM: 7c29abdbbbe61b90069bd92187be266cb7deea43
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

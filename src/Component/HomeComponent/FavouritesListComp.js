@@ -1,22 +1,20 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
-  View,
   Image,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
   Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {Images} from '../../theme/images';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fonts} from '../../theme';
 import Colors from '../../theme/Colors';
-import {moderateScale} from '../../theme/scalling';
 import {Icons} from '../../theme/icons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {moderateScale} from '../../theme/scalling';
 import YesNoButton from './YesNoButton';
-import makeAPIRequest from '../../helper/global';
-import {POST, apiConst} from '../../helper/apiConstants';
-import {errorMessage} from '../../helper/constant';
 
 const FavouriteListDetail = props => {
   const openGps = () => {
@@ -116,7 +114,9 @@ const FavouriteListDetail = props => {
             ]}
           />
           <Text style={styles.text}>
-            {props.item.job.clinic.pin_code} | {props.item.distance}
+            {`${props?.item?.job?.clinic?.pin_code ?? ''}   |   ${
+              props?.item?.job?.clinic?.distance ?? ''
+            }`}
           </Text>
         </View>
       </View>

@@ -1,41 +1,70 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
-/* eslint-disable prettier/prettier */
-import React, {useState, useRef, useMemo, useEffect} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  Dimensions,
-  TextInput,
-  Platform,
-} from 'react-native';
-import MainHeader from '../Component/HomeComponent/MainHeader';
-import Colors from '../theme/Colors';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Images} from '../theme/images';
-import {Icons} from '../theme/icons';
-import {JobList} from '../theme/ConstantArray';
-import {Fonts} from '../theme';
-import JobilstComp from '../Component/HomeComponent/JobDetails';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {Rating, AirbnbRating} from 'react-native-ratings';
-import YesNoButton from '../Component/HomeComponent/YesNoButton';
-import {Calendar} from 'react-native-calendars';
-import {changeMonth} from '../theme/controller';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import ConformationModal from '../Component/HomeComponent/ConformationModal';
-import CalendarPicker from 'react-native-calendar-picker';
-import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
-import makeAPIRequest from '../helper/global';
-import {GET, POST, PUT, apiConst} from '../helper/apiConstants';
+import moment from 'moment';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
+import {AirbnbRating} from 'react-native-ratings';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import ConformationModal from '../Component/HomeComponent/ConformationModal';
+import JobilstComp from '../Component/HomeComponent/JobDetails';
+import MainHeader from '../Component/HomeComponent/MainHeader';
+import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {apiConst, GET, POST, PUT} from '../helper/apiConstants';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {JobList} from '../theme/ConstantArray';
+import {Icons} from '../theme/icons';
+import {Images} from '../theme/images';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
+
+const getHour = (userDate, userTime) => {
+  const dateArray = userDate.split('/');
+  const timeSplittedArray = userTime.split(':');
+  const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
+  const timeArray = timeSplittedArray?.map((item, index) => {
+    if (index === 0) {
+      if (isAM) {
+        return item;
+      } else {
+        return (Number(item) + 12).toString();
+      }
+    }
+    return item.slice(0, 2);
+  });
+
+  console.log(timeArray, 'timeArray');
+
+  const targetDate = new Date(
+    dateArray[2],
+    (Number(dateArray[1]) - 1).toString(),
+    dateArray[0],
+    timeArray[0],
+    timeArray[1],
+  );
+
+  const currentDate = new Date();
+
+  const timeDiff = targetDate.getTime() - currentDate.getTime();
+
+  return Math.floor(timeDiff / (1000 * 60 * 60));
+};
 
 const Shifts = ({navigation}) => {
   const reviewBox = [
@@ -104,7 +133,7 @@ const Shifts = ({navigation}) => {
         }
       }
     });
-    console.log('temp :::', JSON.stringify(temp));
+    // console.log('temp :::', JSON.stringify(temp));
     setJobData([...temp]);
     SetOpenConfirmationModal(false);
   };
@@ -125,7 +154,7 @@ const Shifts = ({navigation}) => {
         setSelectedEndDate('');
       }
     } else {
-      console.log('Invalid Date :::');
+      // console.log('Invalid Date :::');
     }
   };
 
@@ -150,7 +179,8 @@ const Shifts = ({navigation}) => {
         setShiftData(response.data.data.results);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error);
+        setMainLoading(false);
+        //  console.log('error', error);
       });
   };
 
@@ -167,21 +197,21 @@ const Shifts = ({navigation}) => {
     })
       .then(response => {
         setMainLoading(false);
-        console.log('response', response.data);
+        // console.log('response', response.data);
         refRBSheet2.current.close();
       })
       .catch(error => {
         setMainLoading(false);
-        console.log('error', error.response.data);
+        // console.log('error', error.response.data);
       });
   };
 
   const reviewShiftClinic = async () => {
-    console.log(reviews, 'reviews');
     setMainLoading(true);
     let data = JSON.stringify({
       reviews: reviews,
     });
+
     return makeAPIRequest({
       method: POST,
       url: apiConst.reviewShiftClinic(shistDetail.id),
@@ -190,11 +220,12 @@ const Shifts = ({navigation}) => {
     })
       .then(response => {
         setMainLoading(false);
-        console.log('response', response.data);
+        // console.log('response', response.data);
         setOpenReviewModal(false);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error.response.data);
+        setMainLoading(false);
+        // console.log('error', error.response.data);
       });
   };
 
@@ -211,12 +242,13 @@ const Shifts = ({navigation}) => {
     })
       .then(response => {
         setMainLoading(false);
-        console.log('response', response.data);
+        // console.log('response', response.data);
         setShistDetail({});
         refRBSheet1.current.close();
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error.response.data);
+        setMainLoading(false);
+        // console.log('error', error.response.data);
       });
   };
 
@@ -240,8 +272,54 @@ const Shifts = ({navigation}) => {
           setCurrentPage(currentPage + 1);
           setShiftData([...shiftData, ...response.data.data.results]);
         })
-        .catch(error => console.log('error', error.response.data));
+        .catch(error => {
+          // console.log('error', error.response.data);
+        });
     }
+  };
+
+  const onPressReview = item => {
+    setShistDetail(item);
+    setOpenReviewModal(true);
+    setReviews(
+      item.clinic.reviewByApplicant === 0
+        ? reviewBox
+        : item.clinic.reviewByApplicant,
+    );
+  };
+
+  const getHour = (userDate, userTime) => {
+    const dateArray = userDate.split('/');
+    const timeSplittedArray = userTime.split(':');
+    console.log(timeSplittedArray, 'timeSplittedArray');
+    const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
+    // console.log(isAM, 'timeSplittedArray[1]?.slice(2).toLowerCase()');
+    const timeArray = timeSplittedArray?.map((item, index) => {
+      if (index === 0) {
+        if (isAM) {
+          return item;
+        } else {
+          return (Number(item) + 12).toString();
+        }
+      }
+      return item.slice(0, 2);
+    });
+
+    console.log(timeArray, 'timeArray');
+
+    const targetDate = new Date(
+      dateArray[2],
+      (Number(dateArray[1]) - 1).toString(),
+      dateArray[0],
+      timeArray[0],
+      timeArray[1],
+    );
+
+    const currentDate = new Date();
+
+    const timeDiff = targetDate.getTime() - currentDate.getTime();
+
+    return Math.floor(timeDiff / (1000 * 60 * 60));
   };
 
   return (
@@ -253,7 +331,6 @@ const Shifts = ({navigation}) => {
         openProfile={() => navigation.navigate('MyProfile')}
       />
       <AcitvityLoader visible={mainLoading} />
-
       <View style={{padding: moderateScale(20), backgroundColor: Colors.white}}>
         <View style={styles.calender_view}>
           <TouchableOpacity
@@ -317,14 +394,13 @@ const Shifts = ({navigation}) => {
                   status={'completed'}
                   send_invoice={() => {
                     setShistDetail(item);
+                    setHourlyRate((item?.shift?.price ?? '').slice(1, 3));
                     refRBSheet2.current.open();
-                    setReviews(reviewBox);
                   }}
-                  reviewModall={() => {
-                    setShistDetail(item), setOpenReviewModal(true);
-                  }}
+                  reviewModall={() => onPressReview(item)}
                   likePress={() => {
-                    SetOpenConfirmationModal(true), setIsItem(item);
+                    SetOpenConfirmationModal(true);
+                    setIsItem(item);
                   }}
                   cancelShift={() => {
                     refRBSheet1.current.open();
@@ -349,17 +425,20 @@ const Shifts = ({navigation}) => {
             borderTopRightRadius: moderateScale(20),
           },
         }}
-        height={470}
+        height={verticalScale(410)}
         openDuration={250}>
+        <AcitvityLoader visible={mainLoading} />
         <View style={styles.rbsheet_mainView}>
           <Text style={styles.rbSheet_header_text}>Send Invoice</Text>
           <Text style={styles.textInpute_titlle}>Total Hours Worked*</Text>
           <View style={styles.textinpute_view}>
             <TextInput
+              autoFocus
               style={styles.textinpute}
               placeholder={'Enter here...'}
               placeholderTextColor={Colors.gray[500]}
               onChangeText={text => setHourWorked(text)}
+              keyboardType={'number-pad'}
             />
             <Text style={styles.hours_text}>Hours</Text>
           </View>
@@ -371,45 +450,48 @@ const Shifts = ({navigation}) => {
               style={styles.textinpute}
               placeholder={'Enter here...'}
               placeholderTextColor={Colors.gray[500]}
+              value={hourlyRate}
               onChangeText={text => setHourlyRate(text)}
+              keyboardType={'number-pad'}
             />
           </View>
-          <View
-            style={{
-              padding: moderateScale(13),
-              marginVertical: moderateScale(10),
-              backgroundColor: Colors.red[50],
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={Icons.alert_circle}
-                style={{width: moderateScale(20), height: moderateScale(20)}}
-              />
+          {(shistDetail?.shift?.price ?? '').slice(1, 3) !== hourlyRate && (
+            <View
+              style={{
+                padding: moderateScale(13),
+                marginVertical: moderateScale(10),
+                backgroundColor: Colors.red[50],
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={Icons.alert_circle}
+                  style={{width: moderateScale(20), height: moderateScale(20)}}
+                />
+                <Text
+                  style={{
+                    color: Colors.red[500],
+                    fontFamily: Fonts.satoshi_bold,
+                    marginLeft: moderateScale(5),
+                  }}>
+                  Attention
+                </Text>
+              </View>
               <Text
                 style={{
                   color: Colors.red[500],
-                  fontFamily: Fonts.satoshi_bold,
+                  fontFamily: Fonts.satoshi_regular,
                   marginLeft: moderateScale(5),
+                  textAlign: 'justify',
+                  marginTop: moderateScale(5),
+                  fontSize: moderateScale(13),
                 }}>
-                Attention
+                You are changing the Hourly Price at which this clinic hired
+                you. Please note that this can lead to payment disputes in
+                future. Talk to the clinic owner before sending the invoice.
               </Text>
             </View>
-            <Text
-              style={{
-                color: Colors.red[500],
-                fontFamily: Fonts.satoshi_regular,
-                marginLeft: moderateScale(5),
-                textAlign: 'justify',
-                marginTop: moderateScale(5),
-                fontSize: moderateScale(13),
-              }}>
-              You are changing the Hourly Price at which this clinic hired you.
-              Please note that this can lead to payment disputes in future. Talk
-              to the clinic owner before sending the invoice.
-            </Text>
-          </View>
+          )}
           <YesNoButton
-            //API INtegrate
             first_button_backgroundColor={Colors.borderColor}
             first_button_color={Colors.black}
             first_button_text={'Do it later'}
@@ -580,6 +662,7 @@ const Shifts = ({navigation}) => {
         visible={openReviewModal}
         onRequestClose={() => setOpenReviewModal(false)}>
         <View style={{flex: 1}}>
+          <AcitvityLoader visible={mainLoading} />
           <Image
             source={Images.BlackBackground}
             style={styles.modal_backgroundimage}
@@ -681,7 +764,6 @@ const Shifts = ({navigation}) => {
                       reviews={[]}
                       showRating={false}
                       onFinishRating={value => {
-                        console.log(value, 'value');
                         let updatedReview = reviews.map((reviewItem, key) => {
                           if (key === index) {
                             return {
@@ -752,7 +834,15 @@ const Shifts = ({navigation}) => {
               first_button_backgroundColor={Colors.borderColor}
               first_button_color={Colors.black}
               first_button_text={'Cancel'}
-              second_button_backgroundColor={Colors.sky_color}
+              // second_button_backgroundColor={Colors.sky_color}
+              second_button_backgroundColor={
+                shistDetail?.clinic?.reviewByApplicant?.length === 0
+                  ? Colors.sky_color
+                  : Colors.borderColor
+              }
+              second_button_disable={
+                !(shistDetail?.clinic?.reviewByClinic?.length === 0)
+              }
               second_button_color={Colors.white}
               second_button_text={'Submit Review'}
               first_button_call={() => setOpenReviewModal(false)}

@@ -1,42 +1,64 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
   Image,
-  TouchableOpacity,
-  TextInput,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import AuthHeader from '../Component/AuthComponent/AuthHeader';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
 import {Icons} from '../theme/icons';
 import {Images} from '../theme/images';
-import {moderateScale, verticalScale} from '../theme/scalling';
-import DropDownComp from '../Component/HomeComponent/DropDown';
-
-import {GraduationYear, profession} from '../theme/ConstantArray';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
 import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
-import SimpleButton from '../Component/HomeComponent/SimpleButton';
-
-import ImageCropPicker from 'react-native-image-crop-picker';
-import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Moment from 'moment';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import YesNoButton from '../Component/HomeComponent/YesNoButton';
-import PhoneInput from 'react-native-phone-number-input';
-import ConformationModal from '../Component/HomeComponent/ConformationModal';
-import {POST, apiConst} from '../helper/apiConstants';
-import makeAPIRequest from '../helper/global';
-import moment from 'moment';
-import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
+import {profession} from '../theme/ConstantArray';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {default as Moment, default as moment} from 'moment';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import PhoneInput from 'react-native-phone-number-input';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import ConformationModal from '../Component/HomeComponent/ConformationModal';
+import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
+import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {apiConst, POST} from '../helper/apiConstants';
+import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+
+const getDate = date => {
+  let dateComponents = date.split(' ');
+  let day = parseInt(dateComponents[0], 10);
+  let month = dateComponents[1].slice(0, 3);
+  let year = parseInt(dateComponents[2], 10);
+  console.log(month);
+  let monthMap = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
+  };
+
+  return new Date(year, monthMap[month], day);
+};
 
 const EditProfile = ({navigation, route}) => {
   let isUpdate;
@@ -48,27 +70,33 @@ const EditProfile = ({navigation, route}) => {
     isNew = route.params ? route.params.isNew : false;
   }
 
+  console.log(item, 'item');
+
   const [image, setImage] = useState(null);
   const [gender, setGender] = useState(isUpdate ? item.gender : null);
-  const [selectRange, setSelectRange] = useState(0);
-
+  const [selectRange, setSelectRange] = useState(
+    Number(item?.travelDistance) ?? 0,
+  );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [birthDate, setBirthDate] = useState(
-    // isUpdate ? moment(item.dob,'YYYY/MM/DD').toISOString() : new Date(),
-    new Date(),
+    isUpdate && item?.dob ? getDate(item?.dob) : new Date(),
   );
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
-    name: '',
+    name: item.education,
     _id: '',
   });
   const [openDropDownModal, setOpenDropDownModal] = useState(false);
   const [number, setNumber] = useState(isUpdate ? item.phone : '');
-  const [graduationYear, setGraduationYear] = useState({name: '', _id: ''});
+  const [graduationYear, setGraduationYear] = useState({
+    name: item.yearOfGraduation,
+    _id: '',
+  });
   const [openGraduationYearModal, setOpenGraduationYearModal] = useState(false);
   const [year, setYear] = useState(null);
   const [name, setName] = useState(isUpdate ? item.name : '');
   const [pincode, setPincode] = useState(isUpdate ? item.pin : '');
+  const [mainLoading, setMainLoading] = useState(false);
 
   useEffect(() => {
     var start_year = 1960;
@@ -168,6 +196,7 @@ const EditProfile = ({navigation, route}) => {
   };
 
   const onSubmit = async () => {
+    setMainLoading(true);
     let response = await getLatitudeFromPincode(pincode)
       .then(res => {
         const {results} = res.data;
@@ -192,7 +221,7 @@ const EditProfile = ({navigation, route}) => {
       latitude: response.lat,
       longitude: response.lng,
     });
-
+    console.log(data, 'data');
     if (name == '') {
       errorMessage({message: 'Enter your name'});
     } else if (number == '') {
@@ -201,9 +230,9 @@ const EditProfile = ({navigation, route}) => {
       errorMessage({message: 'Enter your pincode '});
     } else if (gender == null) {
       errorMessage({message: 'Please select gender '});
-    } else if (selectedItem._id == '') {
+    } else if (selectedItem.name == '') {
       errorMessage({message: 'Please select profession '});
-    } else if (graduationYear._id == '') {
+    } else if (graduationYear.name == '') {
       errorMessage({message: 'Please select year of graguation '});
     } else if (selectRange == 0) {
       errorMessage({message: 'Please select radius from pincode '});
@@ -215,12 +244,14 @@ const EditProfile = ({navigation, route}) => {
         data: data,
       })
         .then(response => {
+          setMainLoading(false);
           console.log('response', response.data);
           isUpdate
             ? navigation.goBack()
             : navigation.navigate('DentalStaffTab');
         })
         .catch(error => {
+          setMainLoading(false);
           console.log('error', error.response.data);
         });
     }
@@ -228,6 +259,7 @@ const EditProfile = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AcitvityLoader visible={mainLoading} />
       <AuthHeader
         profileTextEnable={true}
         smallText="Tell us more about yourself"
@@ -246,21 +278,29 @@ const EditProfile = ({navigation, route}) => {
             flexGrow: 1,
           }}
           showsVerticalScrollIndicator={false}>
-          <TouchableOpacity
-            style={[
-              styles.profile_view,
-              {
-                padding: image == null ? moderateScale(30) : 0,
-                borderWidth: image == null ? 1 : 0,
-              },
-            ]}
-            onPress={() => imageselect()}>
-            <Image
-              source={image == null ? Icons.selectImage : {uri: image}}
-              style={image !== null ? styles.profile_image : {}}
-            />
-          </TouchableOpacity>
-          {/* )} */}
+          <View style={styles.profile_image_container}>
+            <ImageBackground
+              source={
+                image !== null
+                  ? {uri: image}
+                  : item?.avatar
+                  ? {uri: item?.avatar}
+                  : Icons.userDefault
+              }
+              imageStyle={styles.profile_image_radius}
+              resizeMode={'contain'}
+              style={styles.profile_image}>
+              <TouchableOpacity
+                style={styles.plus_image_container}
+                onPress={() => imageselect()}>
+                <Image
+                  source={Icons.plus}
+                  resizeMode={'contain'}
+                  style={styles.plus_image}
+                />
+              </TouchableOpacity>
+            </ImageBackground>
+          </View>
           <Text style={styles.test_style}>Upload profile photo</Text>
 
           <Text style={[styles.field_title, {marginTop: moderateScale(20)}]}>
@@ -503,11 +543,31 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     padding: moderateScale(20),
   },
+  profile_image_container: {
+    alignItems: 'center',
+  },
   profile_image: {
     borderRadius: moderateScale(50),
     width: moderateScale(100),
     height: moderateScale(100),
-    alignSelf: 'center',
+  },
+  profile_image_radius: {
+    borderRadius: moderateScale(50),
+  },
+  plus_image_container: {
+    right: verticalScale(8),
+    position: 'absolute',
+    height: moderateScale(24),
+    width: moderateScale(24),
+    borderRadius: moderateScale(12),
+    backgroundColor: Colors.green[500],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plus_image: {
+    height: moderateScale(18),
+    width: moderateScale(18),
+    tintColor: Colors.white,
   },
   profile_view: {
     alignItems: 'center',

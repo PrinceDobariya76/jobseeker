@@ -1,23 +1,21 @@
-/* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
 
 // Auth Screen
-import Splashscreen1 from '../authScreen/Splashscreen1';
-import Login from '../authScreen/Login';
 import ForgetPassword from '../authScreen/ForgetPassword';
+import Login from '../authScreen/Login';
+import Splashscreen1 from '../authScreen/Splashscreen1';
 
 // Home Stack
 import DentalStaffTab from './DentalStaffTab';
 
-import Notification from '../homeScreen/Notification';
-import Profile from '../homeScreen/Profile';
+import ChangePassword from '../authScreen/changePassword';
 import EditProfile from '../homeScreen/EditProfile';
 import JobDetails from '../homeScreen/jobDetails';
-import Splash from '../SplashScreen/Splash';
 import MyProfile from '../homeScreen/MyProfile';
-import ChangePassword from '../authScreen/changePassword';
+import Notification from '../homeScreen/Notification';
+import Profile from '../homeScreen/Profile';
+import Splash from '../SplashScreen/Splash';
 
 const Stack = createNativeStackNavigator();
 

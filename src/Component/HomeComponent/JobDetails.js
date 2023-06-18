@@ -1,24 +1,56 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
-  View,
   Image,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
   Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {Images} from '../../theme/images';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fonts} from '../../theme';
 import Colors from '../../theme/Colors';
-import {moderateScale} from '../../theme/scalling';
 import {Icons} from '../../theme/icons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../../theme/scalling';
 import YesNoButton from './YesNoButton';
-import makeAPIRequest from '../../helper/global';
-import {POST, apiConst} from '../../helper/apiConstants';
-import {errorMessage} from '../../helper/constant';
+
+const getHour = (userDate, userTime) => {
+  const dateArray = userDate.split('/');
+  const timeSplittedArray = userTime.split(':');
+  const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
+  const timeArray = timeSplittedArray?.map((item, index) => {
+    if (index === 0) {
+      if (isAM) {
+        return item;
+      } else {
+        return (Number(item) + 12).toString();
+      }
+    }
+    return item.slice(0, 2);
+  });
+
+  console.log(timeArray, 'timeArray');
+
+  const targetDate = new Date(
+    dateArray[2],
+    (Number(dateArray[1]) - 1).toString(),
+    dateArray[0],
+    timeArray[0],
+    timeArray[1],
+  );
+
+  const currentDate = new Date();
+
+  const timeDiff = targetDate.getTime() - currentDate.getTime();
+
+  return Math.floor(timeDiff / (1000 * 60 * 60));
+};
 
 const JobList = props => {
   const openGps = () => {
@@ -30,6 +62,13 @@ const JobList = props => {
   const onViewAndApplyPress = () => {
     props.navigation.navigate('JobDetails', {jobId: props.item.id});
   };
+
+  const remainHour = getHour(
+    props.item.shift.endDate,
+    props.item.shift.endTime,
+  );
+
+  console.log(`Starting in ${remainHour < 0 ? 0 : remainHour} Hrs`, 'props');
 
   return (
     <View
@@ -60,7 +99,6 @@ const JobList = props => {
           <Text style={styles.time_messure}>/hr</Text>
         </View>
       ) : null}
-
       <View
         style={[
           styles.header_view,
@@ -107,11 +145,15 @@ const JobList = props => {
             ]}
           />
           <Text style={styles.text}>
-            {props.item.clinic.pinCode} | {props.item.distance}
+            {`${props.item.clinic.pinCode}   |   ${props.item.clinic.distance}`}
           </Text>
         </View>
       </View>
-      <View style={[styles.header_view, {marginTop: moderateScale(20)}]}>
+      <View
+        style={[
+          styles.header_view,
+          {marginTop: moderateScale(20), flexWrap: 'wrap'},
+        ]}>
         <View style={styles.check_box_view}>
           <Image
             source={Icons.check_circle_light}
@@ -130,17 +172,15 @@ const JobList = props => {
             Recall: {props.item.clinic.avgRecall}
           </Text>
         </View>
-      </View>
-      <View style={[styles.header_view, {marginTop: moderateScale(10)}]}>
-        <View style={styles.check_box_view}>
-          <Image
-            source={Icons.check_circle_light}
-            style={styles.check_circle_light_image}
-          />
-          <Text style={styles.check_text}>
-            Paid Lunch: {props.item.clinic.lunchtime}
-          </Text>
-        </View>
+        {props.item.clinic.lunchtime === 'yes' && (
+          <View style={styles.check_box_view}>
+            <Image
+              source={Icons.check_circle_light}
+              style={styles.check_circle_light_image}
+            />
+            <Text style={styles.check_text}>Paid Lunch</Text>
+          </View>
+        )}
         <View style={styles.check_box_view}>
           <Image
             source={Icons.check_circle_light}
@@ -150,8 +190,6 @@ const JobList = props => {
             Ulltrasonic: {props.item.clinic.ultrasonic}
           </Text>
         </View>
-      </View>
-      <View style={[styles.header_view, {marginTop: moderateScale(10)}]}>
         <View style={styles.check_box_view}>
           <Image
             source={Icons.check_circle_light}
@@ -231,7 +269,7 @@ const JobList = props => {
                   styles.waiting_text,
                   {fontFamily: Fonts.satoshi_bold, color: Colors.black},
                 ]}>
-                Starting in 12 Hrs
+                {`Starting in  ${remainHour < 0 ? 0 : remainHour} Hrs`}
               </Text>
             </View>
             <TouchableOpacity
@@ -371,9 +409,9 @@ const styles = StyleSheet.create({
     height: moderateScale(14),
   },
   check_box_view: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    marginRight: horizontalScale(15),
+    marginBottom: verticalScale(15),
   },
   check_text: {
     color: Colors.gray[700],
@@ -397,11 +435,10 @@ const styles = StyleSheet.create({
   },
   button_view: {
     flexDirection: 'row',
-    marginTop: moderateScale(30),
+    marginTop: moderateScale(15),
     marginBottom: moderateScale(10),
     flex: 1,
   },
-  // Applied job
   clock_image: {
     width: moderateScale(15),
     height: moderateScale(15),
