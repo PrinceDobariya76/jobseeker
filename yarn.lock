@@ -1767,25 +1767,25 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.4.2.tgz#1fea0eb3ae31841fe87bd6c4fc67569066e9cf4b"
   integrity sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q==
 
-"@react-native-firebase/app@^18.0.0":
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.0.0.tgz#10036e5a480b1143bd88a50643f14ba0e9c62f82"
-  integrity sha512-jvxitPNkcxE6IyGHiOGaURA42ZHBesTeSLbOfqQL6ZtTkQ0sPkFk6VPM2OR5s5S2NfOCfd9dddOhFLIX5VE3ig==
+"@react-native-firebase/app@^18.1.0":
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.1.0.tgz#35b21dc8003026542b2b545ee924d367302dd9fc"
+  integrity sha512-GZSlkNjSZlyB6I2t/5MmD9uDvnteyPOzvYNshaffS/hzRK6LL+3xYTnxqwPl6Kntm8z28FdaQM06OIlkPGQ3+g==
   dependencies:
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@^17.5.0":
-  version "17.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-17.5.0.tgz#7d8df67fb94439452b2d0a4835b9fb26a64c4b10"
-  integrity sha512-iF5Wv7dcDPmxu2om5SkPVGPELAwahAp3izFXjrv6wQAFmOTQ+2rEIDRBFMmS7EZ/qwNodvKK3vgDLEnOxDtTAQ==
+"@react-native-firebase/auth@^18.1.0":
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-18.1.0.tgz#225b7366cd412f2c49b2e643e2f26bcc8bfbb2ae"
+  integrity sha512-9YcwcIdHNBgpSVw7COji3yEQxQw2RbmUA3GZkpAXmiEPPpithpGAOgqHugsLStk5qBiXkRIbmZRKvlAKEtujMg==
   dependencies:
     plist "^3.0.5"
 
-"@react-native-firebase/messaging@^18.0.0":
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.0.0.tgz#3f9e5c280fe99279773c0d59575f2873839b5d39"
-  integrity sha512-BiYeHTNkEi67MBzMUXTjaTwEjbWTkCHcY/1PYejq9IQDxRoeYnlIPjd9J7GmJrY2nGKT14y0U5Q0aK7YU2ZKxA==
+"@react-native-firebase/messaging@^18.1.0":
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.1.0.tgz#812df55cf2c42cbfbf16b9c5150ec26e8762d4f1"
+  integrity sha512-eNWmXGo+HT45b81dzdQa5g5wz4d4EGv78ywwoh0ONM5wcVZ0bl5a+Ak2HPOruCkGa2adkiKstHkGEZRdWPdJkg==
 
 "@react-native-google-signin/google-signin@^10.0.1":
   version "10.0.1"

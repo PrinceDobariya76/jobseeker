@@ -1,15 +1,17 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Dimensions,
   FlatList,
   Image,
+  KeyboardAvoidingView,
   Linking,
   Modal,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -44,12 +46,14 @@ const JobDetails = ({navigation, route}) => {
   const [selected, setSelected] = useState('$50/hr');
   const [isModalVisible, setModalVisible] = useState(false);
   const [isSubmited, setSubmited] = useState(false);
-  const [selectRecommendation, setSelectRecommendation] = useState({
-    id: '',
-    name: '$50/hr (Recomended)',
-    price: '50.00',
-  });
-  const [openDropDownModal, setOpenDropDownModal] = useState(false);
+  // const [selectRecommendation, setSelectRecommendation] = useState({
+  //   id: '',
+  //   name: '$50/hr (Recomended)',
+  //   price: '50.00',
+  // });
+
+  const [price, setPrice] = useState();
+  // const [openDropDownModal, setOpenDropDownModal] = useState(false);
   const [jobData, setJobData] = useState();
   const refRBSheet = useRef();
   const [mainLoading, setMainLoading] = useState(false);
@@ -133,7 +137,7 @@ const JobDetails = ({navigation, route}) => {
     );
   };
 
-  const JobDetails = async () => {
+  const getJobDetails = useCallback(async () => {
     setMainLoading(true);
     makeAPIRequest({
       method: GET,
@@ -146,14 +150,15 @@ const JobDetails = ({navigation, route}) => {
         setJobData(response.data.data);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error.response.data);
+        setMainLoading(false);
+        console.log('error', error.response.data);
         errorMessage({message: error.response.data.message});
       });
-  };
+  }, [route.params.jobId]);
 
   useEffect(() => {
-    JobDetails();
-  }, []);
+    getJobDetails();
+  }, [getJobDetails]);
 
   const countHours = (startTime, endTime) => {
     let startParts = startTime.split(':');
@@ -189,11 +194,11 @@ const JobDetails = ({navigation, route}) => {
   };
 
   const onSubmit = async () => {
-    if (selectRecommendation.id == '') {
-      errorMessage({message: 'Please Select recomended price'});
+    if (!price) {
+      errorMessage({message: 'Please Enter price'});
     } else {
-      let data = JSON.stringify({
-        price: selectRecommendation.price,
+      let priceData = JSON.stringify({
+        price,
       });
 
       setMainLoading(true);
@@ -202,7 +207,7 @@ const JobDetails = ({navigation, route}) => {
         method: POST,
         url: apiConst.applyForJob(route.params.jobId),
         token: true,
-        data: data,
+        data: priceData,
       })
         .then(response => {
           setMainLoading(false);
@@ -219,175 +224,196 @@ const JobDetails = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <AcitvityLoader visible={mainLoading} />
-      <View style={styles.header_container}>
-        <Text style={styles.header_title}>Job Details</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="close" size={25} color={Colors.white} />
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: verticalScale(25),
-          backgroundColor: Colors.gray[100],
-        }}>
-        <Text style={styles.requirement_title}>Job Requirements</Text>
-        <View style={styles.job_require_container}>
-          <View style={styles.row_container}>
-            <View style={styles.date_container}>
-              <View style={styles.inner_row_view}>
-                <Image
-                  source={Icons.calenda_outline}
-                  style={{width: moderateScale(12), height: moderateScale(12)}}
-                />
-                <Text style={styles.sub_title}>Dates</Text>
-              </View>
-              <Text style={styles.title}>
-                {jobData
-                  ? `${jobData.shift.startDate} - ${jobData.shift.endDate}`
-                  : '00/00/1900'}
-              </Text>
-            </View>
-            <View style={styles.date_container}>
-              <View style={styles.inner_row_view}>
-                <Image
-                  source={Icons.dollar}
-                  style={{width: moderateScale(12), height: moderateScale(12)}}
-                />
-                <Text style={styles.sub_title}>Price range</Text>
-              </View>
-              <Text style={styles.title}>
-                {jobData ? `${jobData.price.min} - ${jobData.price.max}` : '0'}
-                /hr
-              </Text>
-            </View>
-          </View>
-          <View style={[styles.row_container, {paddingTop: verticalScale(20)}]}>
-            <View style={styles.date_container}>
-              <View style={styles.inner_row_view}>
-                <Image
-                  source={Icons.education}
-                  style={{width: moderateScale(12), height: moderateScale(12)}}
-                />
-                <Text style={styles.sub_title}>Qualification</Text>
-              </View>
-              <Text style={styles.title}>
-                {jobData ? jobData.qualification : 0}
-              </Text>
-            </View>
-            <View style={styles.date_container}>
-              <View style={styles.inner_row_view}>
-                <Image
-                  source={Icons.Clock_dark}
-                  style={{width: moderateScale(12), height: moderateScale(12)}}
-                />
-                <Text style={styles.sub_title}>Timeslot</Text>
-              </View>
-              <Text style={styles.title}>
-                {' '}
-                {jobData
-                  ? `${jobData.shift.startTime} - ${jobData.shift.endTime}`
-                  : '00:00'}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.horizontal_line} />
-        <View style={styles.profile_container}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={styles.profile_image_round}>
-              <Image source={Images.dummy_profile} />
-            </View>
-            <View style={{paddingLeft: verticalScale(10)}}>
-              <Text style={styles.username}>
-                {jobData ? jobData.practitioner.name : 'owner name'}
-              </Text>
-              <Text style={styles.phone_number}>
-                {jobData ? jobData.practitioner.phone : 'owner phone number'}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={styles.call_container}
-            onPress={() => Linking.openURL(`tel:${'+1(647)947-6676'}`)}>
-            <Image
-              source={Icons.Call}
-              style={{width: moderateScale(19), height: moderateScale(19)}}
-            />
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <AcitvityLoader visible={mainLoading} />
+        <View style={styles.header_container}>
+          <Text style={styles.header_title}>Job Details</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="close" size={25} color={Colors.white} />
           </TouchableOpacity>
         </View>
-        <View style={styles.horizontal_line} />
-        <View style={styles.address_container}>
-          <Text style={styles.username}>
-            {jobData ? jobData.clinic.name : 0}
-          </Text>
-          <Image
-            source={
-              jobData
-                ? jobData.favorite
-                  ? Icons.heart_light
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: verticalScale(25),
+            backgroundColor: Colors.gray[100],
+          }}>
+          <Text style={styles.requirement_title}>Job Requirements</Text>
+          <View style={styles.job_require_container}>
+            <View style={styles.row_container}>
+              <View style={styles.date_container}>
+                <View style={styles.inner_row_view}>
+                  <Image
+                    source={Icons.calenda_outline}
+                    style={{
+                      width: moderateScale(12),
+                      height: moderateScale(12),
+                    }}
+                  />
+                  <Text style={styles.sub_title}>Dates</Text>
+                </View>
+                <Text style={styles.title}>
+                  {jobData
+                    ? `${jobData.shift.startDate} - ${jobData.shift.endDate}`
+                    : '01/01/1900'}
+                </Text>
+              </View>
+              <View style={styles.date_container}>
+                <View style={styles.inner_row_view}>
+                  <Image
+                    source={Icons.dollar}
+                    style={{
+                      width: moderateScale(12),
+                      height: moderateScale(12),
+                    }}
+                  />
+                  <Text style={styles.sub_title}>Price range</Text>
+                </View>
+                <Text style={styles.title}>
+                  {jobData
+                    ? `${jobData.price.min} - ${jobData.price.max}`
+                    : '0'}
+                  /hr
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[styles.row_container, {paddingTop: verticalScale(20)}]}>
+              <View style={styles.date_container}>
+                <View style={styles.inner_row_view}>
+                  <Image
+                    source={Icons.education}
+                    style={{
+                      width: moderateScale(12),
+                      height: moderateScale(12),
+                    }}
+                  />
+                  <Text style={styles.sub_title}>Qualification</Text>
+                </View>
+                <Text style={styles.title}>
+                  {jobData ? jobData.qualification : 0}
+                </Text>
+              </View>
+              <View style={styles.date_container}>
+                <View style={styles.inner_row_view}>
+                  <Image
+                    source={Icons.Clock_dark}
+                    style={{
+                      width: moderateScale(12),
+                      height: moderateScale(12),
+                    }}
+                  />
+                  <Text style={styles.sub_title}>Timeslot</Text>
+                </View>
+                <Text style={styles.title}>
+                  {' '}
+                  {jobData
+                    ? `${jobData.shift.startTime} - ${jobData.shift.endTime}`
+                    : '00:00'}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.horizontal_line} />
+          <View style={styles.profile_container}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={styles.profile_image_round}>
+                <Image source={Images.dummy_profile} />
+              </View>
+              <View style={{paddingLeft: verticalScale(10)}}>
+                <Text style={styles.username}>
+                  {jobData ? jobData.practitioner.name : 'owner name'}
+                </Text>
+                <Text style={styles.phone_number}>
+                  {jobData ? jobData.practitioner.phone : 'owner phone number'}
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.call_container}
+              onPress={() => Linking.openURL(`tel:${'+1(647)947-6676'}`)}>
+              <Image
+                source={Icons.Call}
+                style={{width: moderateScale(19), height: moderateScale(19)}}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.horizontal_line} />
+          <View style={styles.address_container}>
+            <Text style={styles.username}>
+              {jobData ? jobData.clinic.name : 0}
+            </Text>
+            <Image
+              source={
+                jobData
+                  ? jobData.favorite
+                    ? Icons.heart_light
+                    : Icons.heart_outline
                   : Icons.heart_outline
-                : Icons.heart_outline
-            }
-            style={{width: moderateScale(18), height: moderateScale(16)}}
-          />
-        </View>
-        <Text style={styles.address_text}>
-          {jobData ? jobData.clinic.address1 : 0},
-          {jobData ? jobData.clinic.address2 : 0},
-          {jobData ? jobData.clinic.province : 0},
-          {jobData ? jobData.clinic.country : 0}
-        </Text>
-        <Text style={styles.address_text}>
-          {jobData ? jobData.clinic.pin_code : 0}
-        </Text>
-        <View style={styles.map_container}>
-          <MapView
-            region={{
-              latitude: 23.0235062,
-              longitude: 72.5323024,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}
-            provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE} // remove if not using Google Maps
-            onPress={openGps}
-            style={styles.map}
-            mapType={'standard'}>
-            <Marker
-              coordinate={{
+              }
+              style={{width: moderateScale(18), height: moderateScale(16)}}
+            />
+          </View>
+          <Text style={styles.address_text}>
+            {jobData ? jobData.clinic.address1 : 0},
+            {jobData ? jobData.clinic.address2 : 0},
+            {jobData ? jobData.clinic.province : 0},
+            {jobData ? jobData.clinic.country : 0}
+          </Text>
+          <Text style={styles.address_text}>
+            {jobData ? jobData.clinic.pin_code : 0}
+          </Text>
+          <View style={styles.map_container}>
+            <MapView
+              region={{
                 latitude: 23.0235062,
                 longitude: 72.5323024,
-              }}>
-              <View style={styles.map_marker_container}>
-                <View style={styles.map_marker_inner_view} />
-              </View>
-            </Marker>
-          </MapView>
-        </View>
-        <View style={styles.details_container}>
-          <FlatList
-            nestedScrollEnabled={true}
-            data={Details}
-            renderItem={renderItem}
-          />
-        </View>
-      </ScrollView>
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}
+              provider={Platform.OS === 'ios' ? undefined : PROVIDER_GOOGLE} // remove if not using Google Maps
+              onPress={openGps}
+              style={styles.map}
+              mapType={'standard'}>
+              <Marker
+                coordinate={{
+                  latitude: 23.0235062,
+                  longitude: 72.5323024,
+                }}>
+                <View style={styles.map_marker_container}>
+                  <View style={styles.map_marker_inner_view} />
+                </View>
+              </Marker>
+            </MapView>
+          </View>
+          <View style={styles.details_container}>
+            <FlatList
+              nestedScrollEnabled={true}
+              data={Details}
+              renderItem={renderItem}
+            />
+          </View>
+        </ScrollView>
 
-      {isSubmited ? (
-        <View
-          style={[styles.bottom_container, {justifyContent: 'space-between'}]}>
-          <Text style={styles.render_title}>{selected}</Text>
-          <TouchableOpacity
-            style={styles.cancel_button}
-            onPress={() => refRBSheet.current.open()}>
-            <Text style={styles.cancel_text}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.bottom_container}>
-          <View style={{flex: 1.5}}>
-            {/* <DropDown
+        {isSubmited ? (
+          <View
+            style={[
+              styles.bottom_container,
+              {justifyContent: 'space-between'},
+            ]}>
+            <Text style={styles.render_title}>{selected}</Text>
+            <TouchableOpacity
+              style={styles.cancel_button}
+              onPress={() => refRBSheet.current.open()}>
+              <Text style={styles.cancel_text}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.bottom_container}>
+            <View style={{flex: 1.5}}>
+              {/* <DropDown
               selectedValue={selectRecommendation.value}
               placeholder={selectRecommendation.value}
               data={data}
@@ -404,7 +430,7 @@ const JobDetails = ({navigation, route}) => {
               key={'value'}
             /> */}
 
-            <CustomeDropdown
+              {/* <CustomeDropdown
               selectedProfession={selectRecommendation.name}
               data={data}
               title_text=""
@@ -423,101 +449,115 @@ const JobDetails = ({navigation, route}) => {
               }}
               placeholder_text={selectRecommendation.name}
               closeModal={() => setOpenDropDownModal(!openDropDownModal)}
-            />
-          </View>
+            /> */}
 
-          <TouchableOpacity
-            style={styles.submit_button}
-            onPress={() => onSubmit()}>
-            <Text
-              style={[
-                styles.render_title,
-                {color: Colors.white, fontSize: moderateScale(15)},
-              ]}>
-              Submit
-            </Text>
-            <MaterialIcons
-              name="arrow-forward"
-              size={20}
-              color={Colors.white}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <RBSheet
-        ref={refRBSheet}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        closeOnPressBack={true}
-        customStyles={{
-          draggableIcon: {
-            backgroundColor: Colors.gray[300],
-          },
-          container: {
-            borderTopLeftRadius: moderateScale(20),
-            borderTopRightRadius: moderateScale(20),
-          },
-        }}
-        height={470}
-        openDuration={250}>
-        <View style={styles.rbsheet_mainView}>
-          <Text style={styles.sheet_heading}>Cancelling this shift?</Text>
-          <Text style={styles.sheet_title}>
-            Please select your reason for cancelling
-          </Text>
-          <View style={styles.sheet_input_container}>
-            <Text style={styles.sheet_input_text}>
-              I got a better deal somewhere else.
-            </Text>
-            <MaterialIcons
-              name="keyboard-arrow-down"
-              size={25}
-              color={Colors.black}
-            />
-          </View>
-          <View style={styles.sheet_alert_container}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={Icons.alert_circle}
-                style={{width: moderateScale(20), height: moderateScale(20)}}
+              <TextInput
+                style={styles.textInpute_style}
+                placeholder="Enter per hour Price here..."
+                placeholderTextColor={Colors.gray[400]}
+                value={price}
+                autoCapitalize={false}
+                onChangeText={text => setPrice(text)}
+                keyboardType={'number-pad'}
               />
-              <Text style={styles.sheet_alet_title}>Attention</Text>
             </View>
-            <Text style={styles.sheet_alert_des}>
-              You are cancelling with less than 12 hrs left! Shiftable strives
-              to maintain balance in commitments. If you cancel now, your time
-              slot of{' '}
-              <Text style={{fontFamily: Fonts.satoshi_bold}}>
-                2:30 pm - 6:30 pm
-              </Text>{' '}
-              will be blocked for{' '}
-              <Text style={{fontFamily: Fonts.satoshi_bold}}>1 hour</Text>.
-              During this you won’t be able to see any jobs which overlaps with
-              this time slot.
-            </Text>
-          </View>
-          <View style={styles.sheet_button_container}>
+
             <TouchableOpacity
-              style={styles.sheet_button}
-              onPress={() => refRBSheet.current.close()}>
-              <Text style={styles.sheet_button_text}>I changed my mind</Text>
-            </TouchableOpacity>
-            <View style={{flex: 0.1}} />
-            <TouchableOpacity
-              onPress={() => {
-                refRBSheet.current.close();
-                setSubmited(!isSubmited);
-              }}
-              style={[styles.sheet_button, {backgroundColor: Colors.red[50]}]}>
+              style={styles.submit_button}
+              onPress={() => onSubmit()}>
               <Text
-                style={[styles.sheet_button_text, {color: Colors.red[500]}]}>
-                Cancel Anyway
+                style={[
+                  styles.render_title,
+                  {color: Colors.white, fontSize: moderateScale(15)},
+                ]}>
+                Submit
               </Text>
+              <MaterialIcons
+                name="arrow-forward"
+                size={20}
+                color={Colors.white}
+              />
             </TouchableOpacity>
           </View>
-        </View>
-      </RBSheet>
+        )}
+
+        <RBSheet
+          ref={refRBSheet}
+          closeOnDragDown={true}
+          closeOnPressMask={true}
+          closeOnPressBack={true}
+          customStyles={{
+            draggableIcon: {
+              backgroundColor: Colors.gray[300],
+            },
+            container: {
+              borderTopLeftRadius: moderateScale(20),
+              borderTopRightRadius: moderateScale(20),
+            },
+          }}
+          height={470}
+          openDuration={250}>
+          <View style={styles.rbsheet_mainView}>
+            <Text style={styles.sheet_heading}>Cancelling this shift?</Text>
+            <Text style={styles.sheet_title}>
+              Please select your reason for cancelling
+            </Text>
+            <View style={styles.sheet_input_container}>
+              <Text style={styles.sheet_input_text}>
+                I got a better deal somewhere else.
+              </Text>
+              <MaterialIcons
+                name="keyboard-arrow-down"
+                size={25}
+                color={Colors.black}
+              />
+            </View>
+            <View style={styles.sheet_alert_container}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={Icons.alert_circle}
+                  style={{width: moderateScale(20), height: moderateScale(20)}}
+                />
+                <Text style={styles.sheet_alet_title}>Attention</Text>
+              </View>
+              <Text style={styles.sheet_alert_des}>
+                You are cancelling with less than 12 hrs left! Shiftable strives
+                to maintain balance in commitments. If you cancel now, your time
+                slot of{' '}
+                <Text style={{fontFamily: Fonts.satoshi_bold}}>
+                  2:30 pm - 6:30 pm
+                </Text>{' '}
+                will be blocked for{' '}
+                <Text style={{fontFamily: Fonts.satoshi_bold}}>1 hour</Text>.
+                During this you won’t be able to see any jobs which overlaps
+                with this time slot.
+              </Text>
+            </View>
+            <View style={styles.sheet_button_container}>
+              <TouchableOpacity
+                style={styles.sheet_button}
+                onPress={() => refRBSheet.current.close()}>
+                <Text style={styles.sheet_button_text}>I changed my mind</Text>
+              </TouchableOpacity>
+              <View style={{flex: 0.1}} />
+              <TouchableOpacity
+                onPress={() => {
+                  refRBSheet.current.close();
+                  setSubmited(!isSubmited);
+                }}
+                style={[
+                  styles.sheet_button,
+                  {backgroundColor: Colors.red[50]},
+                ]}>
+                <Text
+                  style={[styles.sheet_button_text, {color: Colors.red[500]}]}>
+                  Cancel Anyway
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </RBSheet>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -564,6 +604,15 @@ const styles = StyleSheet.create({
   date_container: {
     flex: 1,
   },
+  textInpute_style: {
+    color: Colors.black,
+    flex: 1,
+    borderWidth: 1,
+    borderColor: Colors.borderColor,
+    borderRadius: moderateScale(4),
+    padding: moderateScale(10),
+    backgroundColor: Colors.white,
+  },
   sub_title: {
     fontFamily: Fonts.satoshi_regular,
     color: Colors.gray[900],
@@ -586,6 +635,12 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(20),
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  field_title: {
+    color: Colors.black,
+    fontSize: moderateScale(15),
+    fontFamily: Fonts.satoshi_medium,
+    marginTop: moderateScale(20),
   },
   profile_image_round: {
     borderRadius: moderateScale(50),
@@ -672,6 +727,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(20),
     paddingVertical: verticalScale(10),
     alignItems: 'center',
+    justifyContent: 'center',
   },
   price_selector: {
     borderColor: '#CECECE',

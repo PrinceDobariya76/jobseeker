@@ -35,8 +35,6 @@ const getHour = (userDate, userTime) => {
     return item.slice(0, 2);
   });
 
-  console.log(timeArray, 'timeArray');
-
   const targetDate = new Date(
     dateArray[2],
     (Number(dateArray[1]) - 1).toString(),
@@ -53,6 +51,7 @@ const getHour = (userDate, userTime) => {
 };
 
 const JobList = props => {
+  console.log(props, 'props');
   const openGps = () => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
     var url = scheme + `${'20.5937'},${'78.9629'}`;
@@ -67,8 +66,6 @@ const JobList = props => {
     props.item.shift.endDate,
     props.item.shift.endTime,
   );
-
-  console.log(`Starting in ${remainHour < 0 ? 0 : remainHour} Hrs`, 'props');
 
   return (
     <View

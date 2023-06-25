@@ -88,9 +88,9 @@ const Jobs = ({navigation}) => {
         console.log('response', response.data);
       })
       .catch(error => {
-        setMainLoading(false),
-          SetOpenConfirmationModal(false),
-          console.log('error--', error);
+        setMainLoading(false);
+        SetOpenConfirmationModal(false);
+        console.log('error--', error);
       });
   };
 
