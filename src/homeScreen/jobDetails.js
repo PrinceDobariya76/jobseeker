@@ -1,12 +1,10 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  Alert,
   Dimensions,
   FlatList,
   Image,
   KeyboardAvoidingView,
   Linking,
-  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -15,23 +13,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import Colors from '../theme/Colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Fonts} from '../theme';
-import {Icons} from '../theme/icons';
-import {Images} from '../theme/images';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import DropDown from '../Component/HomeComponent/DropDown';
-import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
-import makeAPIRequest from '../helper/global';
-import {GET, POST, apiConst} from '../helper/apiConstants';
-import moment from 'moment';
-import {errorMessage} from '../helper/constant';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import {apiConst, GET, POST} from '../helper/apiConstants';
+import {errorMessage} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {Icons} from '../theme/icons';
+import {Images} from '../theme/images';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
 const data = [
   {key: '1', price: '50.00', name: '$50/hr (Recomended)'},
@@ -196,6 +191,13 @@ const JobDetails = ({navigation, route}) => {
   const onSubmit = async () => {
     if (!price) {
       errorMessage({message: 'Please Enter price'});
+    } else if (
+      Number(price) < Number(jobData.price.min.slice(1)) ||
+      Number(price) > Number(jobData.price.max.slice(1))
+    ) {
+      errorMessage({
+        message: 'Your asking price is outside of the clinic’s asking price',
+      });
     } else {
       let priceData = JSON.stringify({
         price,
