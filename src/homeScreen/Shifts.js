@@ -49,8 +49,6 @@ const getHour = (userDate, userTime) => {
     return item.slice(0, 2);
   });
 
-  console.log(timeArray, 'timeArray');
-
   const targetDate = new Date(
     dateArray[2],
     (Number(dateArray[1]) - 1).toString(),
@@ -77,7 +75,7 @@ const Shifts = ({navigation}) => {
       review: '2. Was the staff polite and professional?',
     },
     {
-      rating: 3,
+      rating: 0,
       review: '3. How much did you like working there?',
     },
   ];
@@ -207,6 +205,7 @@ const Shifts = ({navigation}) => {
   };
 
   const reviewShiftClinic = async () => {
+    console.log('jkl');
     setMainLoading(true);
     let data = JSON.stringify({
       reviews: reviews,
@@ -220,7 +219,7 @@ const Shifts = ({navigation}) => {
     })
       .then(response => {
         setMainLoading(false);
-        // console.log('response', response.data);
+        console.log('response', response.data);
         setOpenReviewModal(false);
       })
       .catch(error => {
@@ -251,6 +250,7 @@ const Shifts = ({navigation}) => {
         // console.log('error', error.response.data);
       });
   };
+  console.log(shistDetail, 'shistDetail');
 
   const onEndReached = async () => {
     if (pageCount === true) {
@@ -279,10 +279,11 @@ const Shifts = ({navigation}) => {
   };
 
   const onPressReview = item => {
+    console.log(item, 'item is here');
     setShistDetail(item);
     setOpenReviewModal(true);
     setReviews(
-      item.clinic.reviewByApplicant === 0
+      item.clinic.reviewByApplicant.length === 0
         ? reviewBox
         : item.clinic.reviewByApplicant,
     );
@@ -841,7 +842,7 @@ const Shifts = ({navigation}) => {
                   : Colors.borderColor
               }
               second_button_disable={
-                !(shistDetail?.clinic?.reviewByClinic?.length === 0)
+                !(shistDetail?.clinic?.reviewByApplicant?.length === 0)
               }
               second_button_color={Colors.white}
               second_button_text={'Submit Review'}
