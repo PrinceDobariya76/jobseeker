@@ -42,7 +42,7 @@ const MainHeader = ({
       ]}>
       <View style={styles.logo_container}>
         {isShowLogo ? (
-          <Image source={Images.whiteLogo} />
+          <Image source={Images.whiteLogo} style={styles.logo_icon} />
         ) : (
           <Text style={styles.text}>{text}</Text>
         )}
@@ -93,6 +93,11 @@ const styles = StyleSheet.create({
   logo_container: {
     flex: 1,
     justifyContent: 'center',
+    top: verticalScale(18),
+  },
+  logo_icon: {
+    height: moderateScale(130),
+    width: moderateScale(130),
   },
   secondary_container: {
     flex: 0.3,
