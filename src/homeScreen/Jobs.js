@@ -1,31 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
-import React, {useMemo, useState, useEffect} from 'react';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import moment from 'moment';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
   FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import ButtonHeader from '../Component/HomeComponent/ButtonHeader';
+import ConformationModal from '../Component/HomeComponent/ConformationModal';
+import JobilstComp from '../Component/HomeComponent/JobDetails';
 import MainHeader from '../Component/HomeComponent/MainHeader';
+import {apiConst, DELETE, GET, POST, PUT} from '../helper/apiConstants';
+import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
-import {moderateScale} from '../theme/scalling';
-import ButtonHeader from '../Component/HomeComponent/ButtonHeader';
 import {Icons} from '../theme/icons';
-import {JobList} from '../theme/ConstantArray';
-import JobilstComp from '../Component/HomeComponent/JobDetails';
-import ConformationModal from '../Component/HomeComponent/ConformationModal';
-import CalendarPicker from 'react-native-calendar-picker';
-import moment from 'moment';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import makeAPIRequest from '../helper/global';
-import {DELETE, GET, POST, PUT, apiConst} from '../helper/apiConstants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused} from '@react-navigation/native';
-import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import {moderateScale} from '../theme/scalling';
 
 const Jobs = ({navigation}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -272,8 +271,12 @@ const Jobs = ({navigation}) => {
       <ButtonHeader
         first_button="Open Jobs"
         second_button="Applied Jobs"
-        selectFirstButton={() => setSelectButton(1)}
-        selectsecondButton={() => setSelectButton(2)}
+        selectFirstButton={() => {
+          setSelectButton(1);
+        }}
+        selectsecondButton={() => {
+          setSelectButton(2);
+        }}
         selectedButton={selectButton}
       />
       <AcitvityLoader visible={mainLoading} />

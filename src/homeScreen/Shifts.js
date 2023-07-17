@@ -8,7 +8,6 @@ import {
   FlatList,
   Image,
   Modal,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -205,7 +204,6 @@ const Shifts = ({navigation}) => {
   };
 
   const reviewShiftClinic = async () => {
-    console.log('jkl');
     setMainLoading(true);
     let data = JSON.stringify({
       reviews: reviews,
@@ -250,7 +248,6 @@ const Shifts = ({navigation}) => {
         // console.log('error', error.response.data);
       });
   };
-  console.log(shistDetail, 'shistDetail');
 
   const onEndReached = async () => {
     if (pageCount === true) {
@@ -279,7 +276,6 @@ const Shifts = ({navigation}) => {
   };
 
   const onPressReview = item => {
-    console.log(item, 'item is here');
     setShistDetail(item);
     setOpenReviewModal(true);
     setReviews(
@@ -292,9 +288,7 @@ const Shifts = ({navigation}) => {
   const getHour = (userDate, userTime) => {
     const dateArray = userDate.split('/');
     const timeSplittedArray = userTime.split(':');
-    console.log(timeSplittedArray, 'timeSplittedArray');
     const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
-    // console.log(isAM, 'timeSplittedArray[1]?.slice(2).toLowerCase()');
     const timeArray = timeSplittedArray?.map((item, index) => {
       if (index === 0) {
         if (isAM) {
@@ -305,8 +299,6 @@ const Shifts = ({navigation}) => {
       }
       return item.slice(0, 2);
     });
-
-    console.log(timeArray, 'timeArray');
 
     const targetDate = new Date(
       dateArray[2],
@@ -674,12 +666,14 @@ const Shifts = ({navigation}) => {
                 styles.rbSheet_header_text,
                 {fontSize: moderateScale(17)},
               ]}>
-              Abadeh Dentals & Teeth Care
+              {shistDetail?.clinic?.name ?? ''}
             </Text>
             <View style={styles.rating_mainView}>
               <View style={styles.rating_view}>
                 <Image source={Icons.star} style={styles.start_image} />
-                <Text style={styles.reviewrate_text}>4.5 (12)</Text>
+                <Text style={styles.reviewrate_text}>{`${
+                  shistDetail?.clinic?.rating?.average ?? ''
+                } (${shistDetail?.clinic?.rating?.totalCount})`}</Text>
               </View>
               <View
                 style={[styles.rating_view, {marginLeft: moderateScale(12)}]}>
@@ -687,7 +681,9 @@ const Shifts = ({navigation}) => {
                   source={Icons.pin}
                   style={[styles.start_image, {width: moderateScale(10)}]}
                 />
-                <Text style={styles.reviewrate_text}>KM102 | 6 kms away</Text>
+                <Text style={styles.reviewrate_text}>{`${
+                  shistDetail?.clinic?.pinCode ?? ''
+                } | ${shistDetail?.clinic?.distance ?? ''}`}</Text>
               </View>
             </View>
             <View style={styles.rating_mainView}>
@@ -736,7 +732,7 @@ const Shifts = ({navigation}) => {
                     fontFamily: Fonts.satoshi_medium,
                   },
                 ]}>
-                $50/hr
+                {shistDetail?.shift?.price && `${shistDetail?.shift?.price}/hr`}
               </Text>
             </View>
             <FlatList
@@ -763,6 +759,9 @@ const Shifts = ({navigation}) => {
                       defaultRating={item.rating}
                       size={17}
                       reviews={[]}
+                      isDisabled={
+                        !(shistDetail?.clinic?.reviewByApplicant?.length === 0)
+                      }
                       showRating={false}
                       onFinishRating={value => {
                         let updatedReview = reviews.map((reviewItem, key) => {
@@ -782,55 +781,6 @@ const Shifts = ({navigation}) => {
                 </View>
               )}
             />
-            {/* <View style={styles.review_modal_rating_view}>
-              <Text style={styles.review_modal_rating_question}>
-                1. How would you rate their work standards?
-              </Text>
-              <View
-                style={{alignItems: 'flex-start', marginTop: moderateScale(3)}}>
-                <AirbnbRating
-                  count={5}
-                  defaultRating={2}
-                  size={17}
-                  reviews={[]}
-                  showRating={false}
-                />
-              </View>
-              <Text
-                style={[
-                  styles.review_modal_rating_question,
-                  {marginTop: moderateScale(13)},
-                ]}>
-                2. Was the staff polite and professional?
-              </Text>
-              <View
-                style={{alignItems: 'flex-start', marginTop: moderateScale(3)}}>
-                <AirbnbRating
-                  count={5}
-                  defaultRating={2}
-                  size={17}
-                  reviews={[]}
-                  showRating={false}
-                />
-              </View>
-              <Text
-                style={[
-                  styles.review_modal_rating_question,
-                  {marginTop: moderateScale(13)},
-                ]}>
-                3. How much did you like working there?
-              </Text>
-              <View
-                style={{alignItems: 'flex-start', marginTop: moderateScale(3)}}>
-                <AirbnbRating
-                  count={5}
-                  defaultRating={2}
-                  size={17}
-                  reviews={[]}
-                  showRating={false}
-                />
-              </View>
-            </View> */}
             <YesNoButton
               first_button_backgroundColor={Colors.borderColor}
               first_button_color={Colors.black}
