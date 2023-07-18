@@ -77,4 +77,15 @@ export const Utils = {
     }
     return order;
   },
+  getDate: userDate => {
+    const dateArray = userDate?.split('/');
+    console.log(dateArray, 'dateArray');
+    const x = new Date(
+      dateArray?.[2],
+      (Number(dateArray?.[1]) - 1).toString(),
+      dateArray?.[0],
+    );
+    console.log(x, 'xx');
+    return x;
+  },
 };

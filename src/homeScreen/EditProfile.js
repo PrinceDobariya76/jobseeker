@@ -1,4 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {default as Moment, default as moment} from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -12,29 +15,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import AuthHeader from '../Component/AuthComponent/AuthHeader';
-import {Fonts} from '../theme';
-import Colors from '../theme/Colors';
-import {Icons} from '../theme/icons';
-import {Images} from '../theme/images';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
-import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
-import {profession} from '../theme/ConstantArray';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import {default as Moment, default as moment} from 'moment';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import PhoneInput from 'react-native-phone-number-input';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import AuthHeader from '../Component/AuthComponent/AuthHeader';
+import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
 import ConformationModal from '../Component/HomeComponent/ConformationModal';
 import CustomeDropdown from '../Component/HomeComponent/CustomeDropdown';
+import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
+import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
 import YesNoButton from '../Component/HomeComponent/YesNoButton';
 import {apiConst, POST} from '../helper/apiConstants';
 import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
 import makeAPIRequest from '../helper/global';
-import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {profession} from '../theme/ConstantArray';
+import {Icons} from '../theme/icons';
+import {Images} from '../theme/images';
+import {moderateScale, verticalScale} from '../theme/scalling';
 
 const getDate = date => {
   let dateComponents = date.split(' ');
@@ -73,7 +73,7 @@ const EditProfile = ({navigation, route}) => {
   console.log(item, 'item');
 
   const [image, setImage] = useState(null);
-  const [gender, setGender] = useState(isUpdate ? item.gender : null);
+  const [gender, setGender] = useState(isUpdate ? item?.gender : null);
   const [selectRange, setSelectRange] = useState(
     Number(item?.travelDistance) ?? 0,
   );
@@ -83,19 +83,19 @@ const EditProfile = ({navigation, route}) => {
   );
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
-    name: item.education,
+    name: item?.education,
     _id: '',
   });
   const [openDropDownModal, setOpenDropDownModal] = useState(false);
   const [number, setNumber] = useState(isUpdate ? item.phone : '');
   const [graduationYear, setGraduationYear] = useState({
-    name: item.yearOfGraduation,
+    name: item?.yearOfGraduation,
     _id: '',
   });
   const [openGraduationYearModal, setOpenGraduationYearModal] = useState(false);
   const [year, setYear] = useState(null);
-  const [name, setName] = useState(isUpdate ? item.name : '');
-  const [pincode, setPincode] = useState(isUpdate ? item.pin : '');
+  const [name, setName] = useState(isUpdate ? item?.name : '');
+  const [pincode, setPincode] = useState(isUpdate ? item?.pin : '');
   const [mainLoading, setMainLoading] = useState(false);
 
   useEffect(() => {
@@ -151,16 +151,16 @@ const EditProfile = ({navigation, route}) => {
 
   const selectItem = item => {
     setSelectedItem({
-      name: item.name,
-      _id: item._id,
+      name: item?.name,
+      _id: item?._id,
     });
     setOpenDropDownModal(!openDropDownModal);
   };
 
   const SelectGraduation = item => {
     setGraduationYear({
-      name: item.name,
-      _id: item._id,
+      name: item?.name,
+      _id: item?._id,
     });
     setOpenGraduationYearModal(!openGraduationYearModal);
   };

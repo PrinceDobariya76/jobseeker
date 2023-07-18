@@ -24,6 +24,7 @@ import ConformationModal from '../Component/HomeComponent/ConformationModal';
 import JobilstComp from '../Component/HomeComponent/JobDetails';
 import MainHeader from '../Component/HomeComponent/MainHeader';
 import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {Utils} from '../ConstantLibrary/react-native-calendar-picker/CalendarPicker/Utils';
 import {apiConst, GET, POST, PUT} from '../helper/apiConstants';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
@@ -33,10 +34,34 @@ import {Icons} from '../theme/icons';
 import {Images} from '../theme/images';
 import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
+const getDateFromDateAndHour = (userDate, userTime) => {
+  const dateArray = userDate?.split('/');
+  const timeSplittedArray = userTime?.split(':');
+  const isAM = timeSplittedArray?.[1]?.slice(2)?.toLowerCase() === 'am';
+  const timeArray = timeSplittedArray?.map((item, index) => {
+    if (index === 0) {
+      if (isAM) {
+        return item;
+      } else {
+        return (Number(item) + 12).toString();
+      }
+    }
+    return item.slice(0, 2);
+  });
+
+  return new Date(
+    dateArray?.[2],
+    (Number(dateArray?.[1]) - 1).toString(),
+    dateArray?.[0],
+    timeArray?.[0],
+    timeArray?.[1],
+  );
+};
+
 const getHour = (userDate, userTime) => {
-  const dateArray = userDate.split('/');
-  const timeSplittedArray = userTime.split(':');
-  const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
+  const dateArray = userDate?.split('/');
+  const timeSplittedArray = userTime?.split(':');
+  const isAM = timeSplittedArray?.[1]?.slice(2)?.toLowerCase() === 'am';
   const timeArray = timeSplittedArray?.map((item, index) => {
     if (index === 0) {
       if (isAM) {
@@ -49,16 +74,24 @@ const getHour = (userDate, userTime) => {
   });
 
   const targetDate = new Date(
-    dateArray[2],
-    (Number(dateArray[1]) - 1).toString(),
-    dateArray[0],
-    timeArray[0],
-    timeArray[1],
+    dateArray?.[2],
+    (Number(dateArray?.[1]) - 1).toString(),
+    dateArray?.[0],
+    timeArray?.[0],
+    timeArray?.[1],
   );
 
   const currentDate = new Date();
 
   const timeDiff = targetDate.getTime() - currentDate.getTime();
+
+  return Math.floor(timeDiff / (1000 * 60 * 60));
+};
+
+const hourDiff = (startDate, startTime, endDate, endTime) => {
+  const timeDiff =
+    getDateFromDateAndHour(endDate, endTime).getTime() -
+    getDateFromDateAndHour(startDate, startTime).getTime();
 
   return Math.floor(timeDiff / (1000 * 60 * 60));
 };
@@ -283,36 +316,6 @@ const Shifts = ({navigation}) => {
         ? reviewBox
         : item.clinic.reviewByApplicant,
     );
-  };
-
-  const getHour = (userDate, userTime) => {
-    const dateArray = userDate.split('/');
-    const timeSplittedArray = userTime.split(':');
-    const isAM = timeSplittedArray[1]?.slice(2).toLowerCase() === 'am';
-    const timeArray = timeSplittedArray?.map((item, index) => {
-      if (index === 0) {
-        if (isAM) {
-          return item;
-        } else {
-          return (Number(item) + 12).toString();
-        }
-      }
-      return item.slice(0, 2);
-    });
-
-    const targetDate = new Date(
-      dateArray[2],
-      (Number(dateArray[1]) - 1).toString(),
-      dateArray[0],
-      timeArray[0],
-      timeArray[1],
-    );
-
-    const currentDate = new Date();
-
-    const timeDiff = targetDate.getTime() - currentDate.getTime();
-
-    return Math.floor(timeDiff / (1000 * 60 * 60));
   };
 
   return (
@@ -696,7 +699,9 @@ const Shifts = ({navigation}) => {
                     fontFamily: Fonts.satoshi_medium,
                   },
                 ]}>
-                12 Nov 2022
+                {moment(Utils.getDate(shistDetail?.shift?.endDate)).format(
+                  'MMM DD YYYY',
+                )}
               </Text>
               <Image
                 source={Icons.Dote}
@@ -714,7 +719,12 @@ const Shifts = ({navigation}) => {
                     fontFamily: Fonts.satoshi_medium,
                   },
                 ]}>
-                6 Hrs
+                {`${hourDiff(
+                  shistDetail?.shift?.startDate,
+                  shistDetail?.shift?.startTime,
+                  shistDetail?.shift?.endDate,
+                  shistDetail?.shift?.endTime,
+                )} Hrs`}
               </Text>
               <Image
                 source={Icons.Dote}

@@ -134,6 +134,8 @@ const Login = ({navigation}) => {
     console.log('userInfo =====>', userInfo);
     let fcmToken = await AsyncStorage.getItem('deviceToken');
 
+    setLoading(true);
+
     let data = {
       email: userInfo.user.email,
       googleId: userInfo.user.id,
@@ -149,7 +151,22 @@ const Login = ({navigation}) => {
       .then(async response => {
         console.log('token', response.data.data.jwt.token);
         AsyncStorage.setItem('token', response.data.data.jwt.token);
-        navigation.navigate('EditProfile', {isNew: true});
+
+        const userProfileDetails = await makeAPIRequest({
+          method: GET,
+          url: apiConst.getUserProfileDetails,
+          token: true,
+        })
+          .then(res => res.data.data)
+          .catch(error => error);
+
+        if (!userProfileDetails?.name) {
+          setLoading(false);
+          navigation.navigate('EditProfile', {isNew: true});
+        } else {
+          setLoading(false);
+          navigation.navigate('DentalStaffTab');
+        }
       })
       .catch(error => {
         setLoading(false);
