@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
@@ -148,6 +147,12 @@ const Jobs = ({navigation}) => {
     setPageCountAppliedJob(true);
     if (isFocused) {
       selectButton == 1 ? getJObs() : getAppliedJobs();
+    }
+  }, [isFocused, selectButton]);
+
+  useEffect(() => {
+    if (!isFocused && selectButton === 2) {
+      setSelectButton(1);
     }
   }, [isFocused, selectButton]);
 

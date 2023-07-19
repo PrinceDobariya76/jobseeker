@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export const BASE_URL = 'https://dev.admin.shiftable.ca/';
 
 export const GET = 'get';

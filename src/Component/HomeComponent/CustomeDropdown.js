@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(4),
     padding: moderateScale(15),
     backgroundColor: Colors.white,
-    marginTop: moderateScale(5),
+    marginTop: moderateScale(8),
   },
 
   // modal

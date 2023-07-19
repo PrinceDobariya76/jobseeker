@@ -160,6 +160,7 @@ const MyProfile = ({navigation}) => {
   };
 
   const onLogout = async () => {
+    SetOpenConfirmationModalLogOut(false);
     setMainLoading(true);
     return makeAPIRequest({
       method: POST,
@@ -172,6 +173,7 @@ const MyProfile = ({navigation}) => {
         navigation.navigate('Login');
       })
       .catch(error => {
+        SetOpenConfirmationModalLogOut(false);
         setMainLoading(false);
         console.log('error', error.response.data);
       });
@@ -185,7 +187,6 @@ const MyProfile = ({navigation}) => {
           isShowLogo={false}
           text="My Profile"
           bellAction={() => navigation.navigate('Notification')}
-          // openProfile={() => navigation.navigate('MyProfile')}
           logout={true}
           onLogout={() => {
             SetOpenConfirmationModalLogOut(true);
@@ -204,7 +205,6 @@ const MyProfile = ({navigation}) => {
                   item: userDetail,
                 })
               }
-              // onPress={() => navigation.navigate('EditProfile')}
               style={styles.editButton}>
               <Image source={Icons.edit} style={styles.edit_image} />
             </TouchableOpacity>

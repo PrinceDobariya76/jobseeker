@@ -206,6 +206,7 @@ const EditProfile = ({navigation, route}) => {
         return latLong;
       })
       .catch(err => {
+        setMainLoading(false);
         errorMessage({message: 'Enter correct zipcode'});
         console.log('err------------->', err.response.data);
       });
@@ -568,17 +569,6 @@ const styles = StyleSheet.create({
     height: moderateScale(18),
     width: moderateScale(18),
     tintColor: Colors.white,
-  },
-  profile_view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: moderateScale(50),
-    padding: moderateScale(30),
-    borderWidth: 1,
-    borderColor: Colors.sky_color,
-    backgroundColor: Colors.blue[100],
-    alignSelf: 'center',
-    borderStyle: 'dashed',
   },
   test_style: {
     fontSize: moderateScale(12),

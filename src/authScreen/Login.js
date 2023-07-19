@@ -27,18 +27,14 @@ import {Icons} from '../theme/icons';
 import {moderateScale} from '../theme/scalling';
 
 const Login = ({navigation}) => {
-  const navigationHomeStack = async () => {
-    navigation.navigate('Profile');
-  };
-
   // const [userName,setUserName] = useState('rajankpatel07@gmail.com')
   // const [password,setPassword] = useState('r12345678')
   // const [userName, setUserName] = useState('rajankpatel1107@gmail.com');
   // const [password, setPassword] = useState('r12345678');
   // const [userName,setUserName] = useState('')
   // const [password,setPassword] = useState('')
-  const [userName, setUserName] = useState('varun@webfixerr.com');
-  const [password, setPassword] = useState('Hash@123');
+  const [userName, setUserName] = useState(''); //'varun@webfixerr.com'
+  const [password, setPassword] = useState(''); //'Hash@123'
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -83,7 +79,7 @@ const Login = ({navigation}) => {
               setLoading(false);
               console.log('response.data', response.data);
               if (response.data.data.name == null) {
-                navigation.navigate('EditProfile', {isNew: true});
+                navigation.navigate('Profile');
               } else {
                 navigation.navigate('DentalStaffTab');
               }
@@ -97,33 +93,8 @@ const Login = ({navigation}) => {
     }
   };
 
-  const onForgetPasswordPress = async () => {
-    if (userName == '') {
-      errorMessage({message: 'Please enter Email '});
-    } else if (!validateEmail(userName)) {
-      errorMessage({message: 'Please enter valid Email '});
-    } else {
-      setLoading(true);
-      let data = {
-        email: userName,
-        role: 'applicant',
-      };
-      return makeAPIRequest({
-        method: POST,
-        url: apiConst.forgetPassowrd,
-        data: data,
-      })
-        .then(response => {
-          setLoading(false);
-          console.log('response', response.data);
-          if (response.data) {
-            navigation.navigate('ForgetPassword');
-          }
-        })
-        .catch(error => {
-          setLoading(false);
-        });
-    }
+  const onForgetPasswordPress = () => {
+    navigation.navigate('ForgetPassword');
   };
 
   const onPressGoogleIcon = async () => {
@@ -162,7 +133,7 @@ const Login = ({navigation}) => {
 
         if (!userProfileDetails?.name) {
           setLoading(false);
-          navigation.navigate('EditProfile', {isNew: true});
+          navigation.navigate('Profile');
         } else {
           setLoading(false);
           navigation.navigate('DentalStaffTab');

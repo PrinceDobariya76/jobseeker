@@ -1,27 +1,24 @@
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import Colors from '../theme/Colors';
-import AuthHeader from '../Component/AuthComponent/AuthHeader';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Fonts} from '../theme';
-import SigningTextInpute from '../Component/AuthComponent/SigningTextInpute';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import YesNoButton from '../Component/HomeComponent/YesNoButton';
-import makeAPIRequest from '../helper/global';
-import {POST, apiConst} from '../helper/apiConstants';
-import {errorMessage, validateEmail, validateNumber} from '../helper/constant';
+import AuthHeader from '../Component/AuthComponent/AuthHeader';
+import SigningTextInpute from '../Component/AuthComponent/SigningTextInpute';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {apiConst, POST} from '../helper/apiConstants';
+import {errorMessage, validateEmail, validateNumber} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
 const ForgetPassword = ({navigation}) => {
   const [showOTP, setShowOTP] = useState(false);
@@ -51,7 +48,7 @@ const ForgetPassword = ({navigation}) => {
         };
         return makeAPIRequest({
           method: POST,
-          url: apiConst.resendOtp,
+          url: apiConst.forgetPassowrd,
           data: data,
         })
           .then(response => {

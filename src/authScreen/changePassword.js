@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import Colors from '../theme/Colors';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import AuthHeader from '../Component/AuthComponent/AuthHeader';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Fonts} from '../theme';
 import SigningTextInpute from '../Component/AuthComponent/SigningTextInpute';
-import YesNoButton from '../Component/HomeComponent/YesNoButton';
-import makeAPIRequest from '../helper/global';
-import {POST, apiConst} from '../helper/apiConstants';
-import {errorMessage} from '../helper/constant';
 import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import YesNoButton from '../Component/HomeComponent/YesNoButton';
+import {apiConst, POST} from '../helper/apiConstants';
+import {errorMessage} from '../helper/constant';
+import makeAPIRequest from '../helper/global';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
 const ChangePassword = ({navigation, route}) => {
   let userEmail = route.params.email;
