@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-lone-blocks */
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -28,14 +28,9 @@ import {moderateScale} from '../theme/scalling';
 const Jobs = ({navigation}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectButton, setSelectButton] = useState(1);
-  const initDate = '2023-02-26';
-  const [selected, setSelected] = useState(initDate);
-  // const [day, setDay] = useState('26');
-  // const [month, setMonth] = useState('February');
-  // const [year, setYear] = useState('2023');
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
-  // const [jobData, setJobData] = useState(JobList);
+  const [profileUrl, setProfileUrl] = useState({});
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
@@ -156,6 +151,28 @@ const Jobs = ({navigation}) => {
     }
   }, [isFocused, selectButton]);
 
+  const getUserProfileDetails = async () => {
+    setMainLoading(true);
+    return makeAPIRequest({
+      method: GET,
+      url: apiConst.getUserProfileDetails,
+      token: true,
+    })
+      .then(response => {
+        setMainLoading(false);
+        setProfileUrl(response?.data?.data?.avatar ?? '');
+      })
+      .catch(() => {
+        setMainLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      getUserProfileDetails();
+    }
+  }, [isFocused]);
+
   const getJObs = async () => {
     setMainLoading(true);
     return makeAPIRequest({
@@ -272,6 +289,7 @@ const Jobs = ({navigation}) => {
         isShowLogo={true}
         bellAction={() => navigation.navigate('Notification')}
         openProfile={() => navigation.navigate('MyProfile')}
+        profileUrl={profileUrl}
       />
       <ButtonHeader
         first_button="Open Jobs"

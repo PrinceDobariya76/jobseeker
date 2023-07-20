@@ -322,6 +322,7 @@ const EditProfile = ({navigation, route}) => {
             <PhoneInput
               disableArrowIcon={true}
               flagButtonStyle={styles.flagStyle}
+              defaultCode={'CA'}
             />
             <View style={styles.main}>
               <TextInput

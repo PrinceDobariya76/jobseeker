@@ -24,6 +24,7 @@ const MainHeader = ({
   openProfile,
   logout = false,
   onLogout,
+  profileUrl,
 }) => {
   return (
     <View
@@ -68,11 +69,11 @@ const MainHeader = ({
         ) : (
           <TouchableOpacity onPress={openProfile}>
             <Image
-              source={Icons.userDefault}
+              source={profileUrl ? {uri: profileUrl} : Icons.userDefault}
               style={{
                 width: moderateScale(42),
                 height: moderateScale(42),
-                tintColor: 'white',
+                borderRadius: moderateScale(21),
               }}
             />
           </TouchableOpacity>
