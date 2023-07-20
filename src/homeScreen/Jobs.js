@@ -30,7 +30,7 @@ const Jobs = ({navigation}) => {
   const [selectButton, setSelectButton] = useState(1);
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
-  const [profileUrl, setProfileUrl] = useState({});
+  const [profileUrl, setProfileUrl] = useState('');
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
