@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   Image,
@@ -70,11 +71,14 @@ const MainHeader = ({
           <TouchableOpacity onPress={openProfile}>
             <Image
               source={profileUrl ? {uri: profileUrl} : Icons.userDefault}
-              style={{
-                width: moderateScale(42),
-                height: moderateScale(42),
-                borderRadius: moderateScale(21),
-              }}
+              style={[
+                {
+                  width: moderateScale(42),
+                  height: moderateScale(42),
+                  borderRadius: moderateScale(21),
+                },
+                !profileUrl && {tintColor: 'white'},
+              ]}
             />
           </TouchableOpacity>
         )}
