@@ -31,10 +31,10 @@ const Login = ({navigation}) => {
   // const [password,setPassword] = useState('r12345678')
   // const [userName, setUserName] = useState('rajankpatel1107@gmail.com');
   // const [password, setPassword] = useState('r12345678');
-  // const [userName,setUserName] = useState('')
-  // const [password,setPassword] = useState('')
-  const [userName, setUserName] = useState(''); //'varun@webfixerr.com'
-  const [password, setPassword] = useState(''); //'Hash@123'
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  // const [userName, setUserName] = useState('varun@webfixerr.com');
+  // const [password, setPassword] = useState('Hash@123');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
