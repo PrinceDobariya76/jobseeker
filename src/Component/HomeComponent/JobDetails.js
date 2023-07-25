@@ -246,15 +246,33 @@ const JobList = props => {
         </View>
       ) : props.lastView === 'Appliedjobs' ? (
         <View style={[styles.button_view, {justifyContent: 'space-between'}]}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={Icons.clock} style={styles.clock_image} />
-            <Text style={styles.waiting_text}>Waiting for approval</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.cancel_button}
-            onPress={props.cancelModal}>
-            <Text style={styles.cancel_text}>Cancel</Text>
-          </TouchableOpacity>
+          {props?.item?.approved === 'unapproved' ? (
+            <>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image source={Icons.clock} style={styles.clock_image} />
+                <Text style={styles.waiting_text}>Waiting for approval</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.cancel_button}
+                onPress={props.cancelModal}>
+                <Text style={styles.cancel_text}>Cancel</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <View style={{flexDirection: 'row'}}>
+              <Image source={Icons.check_green} style={styles.clock_image} />
+              <Text
+                style={[
+                  styles.waiting_text,
+                  {
+                    fontFamily: Fonts.satoshi_bold,
+                    color: Colors.green[400],
+                  },
+                ]}>
+                Completed
+              </Text>
+            </View>
+          )}
         </View>
       ) : props.lastView === 'Shift' ? (
         props.status !== 'completed' ? (

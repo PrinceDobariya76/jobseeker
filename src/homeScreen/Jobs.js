@@ -254,6 +254,8 @@ const Jobs = ({navigation}) => {
     }
   };
 
+  console.log(applyData, 'applyData');
+
   const onEndReachedClosed = () => {
     if (pageCountAppliedJob === true) {
       setLoading(true);
