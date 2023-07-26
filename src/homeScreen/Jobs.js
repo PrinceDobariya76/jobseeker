@@ -190,7 +190,8 @@ const Jobs = ({navigation}) => {
         setData(response.data.data.results);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error.response.data);
+        setMainLoading(false);
+        console.log('error', error.response.data);
       });
   };
 
@@ -207,11 +208,13 @@ const Jobs = ({navigation}) => {
         setApplyData(response.data.data.results);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error);
+        setMainLoading(false);
+        console.log('error', error);
       });
   };
 
   const cancelJobForClinic = async () => {
+    setMainLoading(true);
     let data = JSON.stringify({
       reason: 'I got a better deal somewhere else.',
     });
@@ -225,8 +228,12 @@ const Jobs = ({navigation}) => {
         console.log('response', response.data);
         setJobDetail({});
         setOpenCancelModal(false);
+        setMainLoading(false);
       })
-      .catch(error => console.log('error', error.response.data));
+      .catch(error => {
+        console.log('error', error.response.data);
+        setMainLoading(false);
+      });
   };
 
   const onEndReachedOpen = async () => {
@@ -287,6 +294,7 @@ const Jobs = ({navigation}) => {
         flex: 1,
         backgroundColor: '#F5F5F5',
       }}>
+      <AcitvityLoader visible={mainLoading} />
       <MainHeader
         isShowLogo={true}
         bellAction={() => navigation.navigate('Notification')}
@@ -304,7 +312,7 @@ const Jobs = ({navigation}) => {
         }}
         selectedButton={selectButton}
       />
-      <AcitvityLoader visible={mainLoading} />
+
       <>
         <View
           style={{padding: moderateScale(20), backgroundColor: Colors.white}}>

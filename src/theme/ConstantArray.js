@@ -334,3 +334,19 @@ export const clicData = [
     name: 'Separate Staff Washroom',
   },
 ];
+
+export const educationData = [
+  {id: 1, name: 'Dental Assistant Program'},
+  {id: 2, name: 'Dental Hygienist Program'},
+  {id: 3, name: 'Dental Technician Program'},
+  {id: 4, name: 'Dental Nurse Program'},
+  {id: 5, name: 'Dentist Program'},
+  {id: 6, name: 'Dental Specialist Program'},
+  {id: 7, name: "Associate's Degree in Dental Studies"},
+  {id: 8, name: "Bachelor's Degree in Dental Studies"},
+  {id: 9, name: "Master's Degree in Dentistry"},
+  {id: 10, name: 'Doctorate Degree in Dentistry'},
+  {id: 11, name: 'Continuing Education Courses'},
+  {id: 12, name: 'Self-Taught or Informal Education'},
+  {id: 13, name: 'Other'},
+];

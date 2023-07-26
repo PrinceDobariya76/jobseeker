@@ -23,7 +23,7 @@ import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
-import {profession} from '../theme/ConstantArray';
+import {educationData, profession} from '../theme/ConstantArray';
 import {Icons} from '../theme/icons';
 import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
@@ -252,7 +252,7 @@ const MyProfile = ({navigation}) => {
 
           <CustomeDropdown
             selectedProfession={selectedProfession.name}
-            data={profession}
+            data={educationData}
             title_text="Professional Education"
             excaimination_image={false}
             setOpenDropDownModal={() =>
