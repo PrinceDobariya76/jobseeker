@@ -13,12 +13,12 @@ export const apiConst = {
   login: `${BASE_URL}api/job-seeker/auth/login`,
   refreshToken: `${BASE_URL}api/job-seeker/auth/refresh`,
   logout: `${BASE_URL}api/job-seeker/auth/logout`,
-  googleLogin: `${BASE_URL}api/job-seeker/auth/login/google`, //
+  googleLogin: `${BASE_URL}api/job-seeker/auth/login/google`,
 
-  getOpenedJobs: pageCount =>
-    `${BASE_URL}api/job-seeker/jobs/open?page=${pageCount} `,
-  getAppliedJobs: pageCount =>
-    `${BASE_URL}api/job-seeker/jobs/applied?page=${pageCount}`,
+  getOpenedJobs: (pageCount, date) =>
+    `${BASE_URL}api/job-seeker/jobs/open?page=${pageCount}&date=${date}`,
+  getAppliedJobs: (pageCount, date) =>
+    `${BASE_URL}api/job-seeker/jobs/applied?page=${pageCount}&date=${date}`,
   applyForJob: jobId => `${BASE_URL}api/job-seeker/jobs/${jobId}`,
   jobDetails: jobId => `${BASE_URL}api/job-seeker/jobs/${jobId}`,
   cancelJobForClinic: jobId => `${BASE_URL}api/job-seeker/jobs/${jobId}/cancel`, //put

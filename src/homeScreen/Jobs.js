@@ -26,7 +26,7 @@ import {Icons} from '../theme/icons';
 import {moderateScale} from '../theme/scalling';
 
 const Jobs = ({navigation}) => {
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(true);
   const [selectButton, setSelectButton] = useState(1);
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
@@ -35,11 +35,7 @@ const Jobs = ({navigation}) => {
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
   );
-  const [endDate, setEndDate] = useState(
-    moment(new Date()).format('MMM DD,YYYY'),
-  );
   const [selectedStartDate, setSelectedStartDate] = useState('');
-  const [selectedEndDate, setSelectedEndDate] = useState('');
   const [Data, setData] = useState([]);
   const [applyData, setApplyData] = useState([]);
   const [jobDetail, setJobDetail] = useState({});
@@ -52,16 +48,6 @@ const Jobs = ({navigation}) => {
   const [currentPageAppliedJob, setCurrentPageAppliedJob] = useState(2);
   const [pageCountAppliedJob, setPageCountAppliedJob] = useState(true);
   const [mainLoading, setMainLoading] = useState(false);
-
-  // const marked = useMemo(
-  //   () => ({
-  //     [selected]: {
-  //       selected: true,
-  //       selectedColor: Colors.yellow[400],
-  //     },
-  //   }),
-  //   [selected],
-  // );
 
   const showDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
@@ -117,18 +103,13 @@ const Jobs = ({navigation}) => {
 
   const selectdDate = date => {
     if (date !== null) {
-      if (!startDate) {
-        setStartDate(moment(date).format('MMM DD,YYYY'));
-        setSelectedStartDate(date);
-      } else if (!endDate) {
-        setSelectedEndDate(date);
-        setEndDate(moment(date).format('MMM DD,YYYY'));
-        setDatePickerVisibility(!isDatePickerVisible);
+      setStartDate(moment(date).format('MMM DD,YYYY'));
+      setSelectedStartDate(date);
+      setDatePickerVisibility(!isDatePickerVisible);
+      if (selectButton === 1) {
+        getJObs(moment(date).format('YYYY-MM-DD'));
       } else {
-        setStartDate(moment(date).format('MMM DD,YYYY'));
-        setSelectedStartDate(date);
-        setEndDate('');
-        setSelectedEndDate('');
+        getAppliedJobs(moment(date).format('YYYY-MM-DD'));
       }
     } else {
       console.log('Invalid Date :::');
@@ -140,16 +121,18 @@ const Jobs = ({navigation}) => {
   useEffect(() => {
     setPageCount(true);
     setPageCountAppliedJob(true);
-    if (isFocused) {
-      selectButton == 1 ? getJObs() : getAppliedJobs();
-    }
-  }, [isFocused, selectButton]);
+  }, []);
 
   useEffect(() => {
-    if (!isFocused && selectButton === 2) {
-      setSelectButton(1);
+    if (!isFocused) {
+      if (selectButton === 2) {
+        setSelectButton(1);
+      }
+      if (!isDatePickerVisible) {
+        setDatePickerVisibility(true);
+      }
     }
-  }, [isFocused, selectButton]);
+  }, [isFocused, selectButton, isDatePickerVisible]);
 
   const getUserProfileDetails = async () => {
     setMainLoading(true);
@@ -173,11 +156,15 @@ const Jobs = ({navigation}) => {
     }
   }, [isFocused]);
 
-  const getJObs = async () => {
+  useEffect(() => {
+    setDatePickerVisibility(true);
+  }, [selectButton]);
+
+  const getJObs = async date => {
     setMainLoading(true);
     return makeAPIRequest({
       method: GET,
-      url: apiConst.getOpenedJobs(1),
+      url: apiConst.getOpenedJobs(1, date),
       token: true,
     })
       .then(response => {
@@ -195,11 +182,11 @@ const Jobs = ({navigation}) => {
       });
   };
 
-  const getAppliedJobs = async () => {
+  const getAppliedJobs = async date => {
     setMainLoading(true);
     return makeAPIRequest({
       method: GET,
-      url: apiConst.getAppliedJobs(1),
+      url: apiConst.getAppliedJobs(1, date),
       token: true,
     })
       .then(response => {
@@ -325,13 +312,8 @@ const Jobs = ({navigation}) => {
                 style={styles.calender_image}
               />
               <Text style={styles.date_text}>
-                {startDate == '' ? 'select Date' : startDate}
+                {startDate === '' ? 'select Date' : startDate}
               </Text>
-              <Image
-                source={Icons.Dote}
-                style={{marginLeft: moderateScale(5)}}
-              />
-              <Text style={styles.date_text}>{endDate}</Text>
             </TouchableOpacity>
             <View>
               <Text style={styles.openJob_text}>
@@ -341,12 +323,8 @@ const Jobs = ({navigation}) => {
           </View>
           {isDatePickerVisible && (
             <CalendarPicker
-              multipleDates={[startDate, endDate]}
-              allowRangeSelection={true}
               selectedStartDate={selectedStartDate}
-              selectedEndDate={selectedEndDate}
               onDateChange={selectdDate}
-              // minDate={new Date()}
               selectedDayTextColor="#FFFFFF"
               selectedRangeStyle={{backgroundColor: Colors.blue[500]}}
               selectedRangeStartStyle={{backgroundColor: Colors.blue[500]}}
