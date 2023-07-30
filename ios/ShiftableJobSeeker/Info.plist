@@ -49,7 +49,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>App is need camera access for profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>App is requried location in forgraund mode.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App is need PhotoLibrary access for profile picture.</string>
 	<key>UIAppFonts</key>
