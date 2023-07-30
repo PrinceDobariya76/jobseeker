@@ -27,7 +27,7 @@ import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
 import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
 import YesNoButton from '../Component/HomeComponent/YesNoButton';
 import {apiConst, POST} from '../helper/apiConstants';
-import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
+import {errorMessage, generateNewToken, getLatitudeFromPincode} from '../helper/constant';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
@@ -166,7 +166,9 @@ const EditProfile = ({navigation, route}) => {
   };
 
   const uploadImage = async image1 => {
-    let tokenID = await AsyncStorage.getItem('token');
+    const generatedToken = await generateNewToken();
+    console.log(generatedToken, 'generatedToken At Edit Profile');
+    let tokenID = generatedToken ?? (await AsyncStorage.getItem('token'));
     let apiHeader = {
       'Content-Type': 'multipart/form-data',
       Accept: 'application/json',

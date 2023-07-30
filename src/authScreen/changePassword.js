@@ -41,6 +41,7 @@ const ChangePassword = ({navigation, route}) => {
         method: POST,
         url: apiConst.updatePassword,
         data: data,
+        isNeedToRegenerateToken: false,
       })
         .then(response => {
           console.log('response', response);

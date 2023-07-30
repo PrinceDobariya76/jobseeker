@@ -3,9 +3,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {errorMessage} from './constant';
 import {navigateToLogin} from './constant';
 
-const makeAPIRequest = async ({method, url, data, token = false}) =>
+const makeAPIRequest = async ({method, url, data, token = false, isNeedToRegenerateToken = true,}) =>
   new Promise(async (resolve, reject) => {
-    let tokenID = await AsyncStorage.getItem('token');
+    console.log(url, 'makeAPIRequest');
+    let generatedToken;
+    if (isNeedToRegenerateToken) {
+      console.log('oyy');
+      generatedToken = await generateNewToken();
+      console.log(generatedToken, 'generatedToken');
+    }
+
+    let tokenID = await (generatedToken ??
+      (await AsyncStorage.getItem('token')));
+    console.log(tokenID, 'tokenID');
     let apiHeader = token
       ? {
           'Content-Type': 'application/json',

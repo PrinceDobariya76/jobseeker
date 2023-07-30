@@ -50,6 +50,7 @@ const ForgetPassword = ({navigation}) => {
           method: POST,
           url: apiConst.forgetPassowrd,
           data: data,
+          isNeedToRegenerateToken: false,
         })
           .then(response => {
             console.log('response', response.data);

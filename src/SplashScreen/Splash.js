@@ -4,11 +4,15 @@ import {Images} from '../theme/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET, apiConst} from '../helper/apiConstants';
 import makeAPIRequest from '../helper/global';
+import { generateNewToken } from '../helper/constant';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
     setTimeout(async () => {
-      let tokenID = await AsyncStorage.getItem('token');
+      const generatedToken = await generateNewToken();
+    console.log(generatedToken, 'generatedToken At Splash');
+    let tokenID = generatedToken ?? (await AsyncStorage.getItem('token'));
+
       if (tokenID === null || undefined) {
         navigation.replace('Splashscreen1');
       } else {

@@ -65,6 +65,7 @@ const Login = ({navigation}) => {
         method: POST,
         url: apiConst.login,
         data: data,
+        isNeedToRegenerateToken: false,
       })
         .then(async response => {
           console.log('token', response.data.data.jwt.token);
@@ -118,6 +119,7 @@ const Login = ({navigation}) => {
       method: POST,
       url: apiConst.googleLogin,
       data: data,
+      isNeedToRegenerateToken: false,
     })
       .then(async response => {
         console.log('token', response.data.data.jwt.token);

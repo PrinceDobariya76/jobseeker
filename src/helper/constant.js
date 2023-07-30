@@ -39,19 +39,50 @@ export const validateNumber = number => {
   return numberRegex.test(number);
 };
 
+const getTokenExpiredStatus = tokenExpiresTime => {
+  const tokenExpiresDate = new Date(tokenExpiresTime);
+  const currentDate = new Date();
+
+  const timeDifferenceInSeconds = (tokenExpiresDate - currentDate) / 1000;
+  console.log(timeDifferenceInSeconds, 'timeDifferenceInSeconds');
+
+  return timeDifferenceInSeconds < 120;
+};
+
+
 export const generateNewToken = async () => {
-  return makeAPIRequest({
-    method: POST,
-    url: apiConst.refreshToken,
-    token: true,
-  })
-    .then(response => {
-      console.log('response', response.data.data.jwt);
-      AsyncStorage.setItem('token', response.data.data.jwt.token);
+  let tokenExpireTime = await AsyncStorage.getItem('expiresAt');
+  console.log(tokenExpireTime, 'tokenExpiresTime');
+  console.log(new Date(), 'current Time');
+
+  const isTokenExpired = getTokenExpiredStatus(tokenExpireTime);
+
+  console.log(isTokenExpired, 'isTokenExpired');
+
+  if (isTokenExpired) {
+    console.log('OKL');
+    return await makeAPIRequest({
+      method: POST,
+      url: apiConst.refreshToken,
+      token: true,
+      isNeedToRegenerateToken: false,
     })
-    .catch(error => {
-      console.log('eorooo', error.response);
-    });
+      .then(async response => {
+        console.log('response_token', response.data.data.jwt.token);
+        await AsyncStorage.setItem('token', response.data.data.jwt.token);
+        await AsyncStorage.setItem(
+          'expiresAt',
+          response.data.data.jwt.expiresAt,
+        );
+
+        return response.data.data.jwt.token;
+      })
+      .catch(error => {
+        console.log('eorooo', error.response.data);
+      });
+  } else {
+    return null;
+  }
 };
 
 export const commonActions = screenName => {
