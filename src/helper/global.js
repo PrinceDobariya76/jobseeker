@@ -1,9 +1,15 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {errorMessage} from './constant';
+import {errorMessage, generateNewToken} from './constant';
 import {navigateToLogin} from './constant';
 
-const makeAPIRequest = async ({method, url, data, token = false, isNeedToRegenerateToken = true,}) =>
+const makeAPIRequest = async ({
+  method,
+  url,
+  data,
+  token = false,
+  isNeedToRegenerateToken = true,
+}) =>
   new Promise(async (resolve, reject) => {
     console.log(url, 'makeAPIRequest');
     let generatedToken;

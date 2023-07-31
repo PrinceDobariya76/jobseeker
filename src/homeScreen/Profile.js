@@ -26,7 +26,11 @@ import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
 import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
 import SimpleButton from '../Component/HomeComponent/SimpleButton';
 import {apiConst, POST} from '../helper/apiConstants';
-import {errorMessage, generateNewToken, getLatitudeFromPincode} from '../helper/constant';
+import {
+  errorMessage,
+  generateNewToken,
+  getLatitudeFromPincode,
+} from '../helper/constant';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';

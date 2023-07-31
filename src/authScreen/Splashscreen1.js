@@ -99,7 +99,7 @@ const Splashscreen1 = ({navigation}) => {
                 </View>
                 <View style={styles.skip_view}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Login')}
+                    onPress={() => navigation.replace('Login')}
                     style={[
                       styles.skip_button,
                       {

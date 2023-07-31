@@ -49,11 +49,14 @@ const getTokenExpiredStatus = tokenExpiresTime => {
   return timeDifferenceInSeconds < 120;
 };
 
-
 export const generateNewToken = async () => {
   let tokenExpireTime = await AsyncStorage.getItem('expiresAt');
   console.log(tokenExpireTime, 'tokenExpiresTime');
   console.log(new Date(), 'current Time');
+  if (!tokenExpireTime) {
+    console.log('Hii');
+    return null;
+  }
 
   const isTokenExpired = getTokenExpiredStatus(tokenExpireTime);
 

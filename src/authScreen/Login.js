@@ -80,9 +80,9 @@ const Login = ({navigation}) => {
               setLoading(false);
               console.log('response.data', response.data);
               if (response.data.data.name == null) {
-                navigation.navigate('Profile');
+                navigation.replace('Profile');
               } else {
-                navigation.navigate('DentalStaffTab');
+                navigation.replace('DentalStaffTab');
               }
             })
             .catch(error => setLoading(false));
@@ -135,10 +135,10 @@ const Login = ({navigation}) => {
 
         if (!userProfileDetails?.name) {
           setLoading(false);
-          navigation.navigate('Profile');
+          navigation.replace('Profile');
         } else {
           setLoading(false);
-          navigation.navigate('DentalStaffTab');
+          navigation.replace('DentalStaffTab');
         }
       })
       .catch(error => {
