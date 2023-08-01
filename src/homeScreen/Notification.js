@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   View,
   Text,
@@ -5,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import Colors from '../theme/Colors';
@@ -16,18 +18,28 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useIsFocused} from '@react-navigation/native';
 import makeAPIRequest from '../helper/global';
 import {GET, apiConst} from '../helper/apiConstants';
+import {useState} from 'react';
+import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import {Icons} from '../theme/icons';
 
 const Notification = ({navigation}) => {
+  const [mainLoading, setMainLoading] = useState(false);
+  const [notificationData, setNotificationData] = useState([]);
+
   const getNotification = async () => {
+    setMainLoading(true);
     return makeAPIRequest({
       method: GET,
       url: apiConst.getNotifications,
       token: true,
     })
       .then(response => {
-        console.log('response', response.data);
+        setMainLoading(false);
+        console.log('response', response.data.data.results);
+        setNotificationData(response.data.data.results);
       })
       .catch(error => {
+        setMainLoading(false);
         console.log('error', error.response);
       });
   };
@@ -45,7 +57,7 @@ const Notification = ({navigation}) => {
       <View style={styles.render_container}>
         <View style={{paddingTop: verticalScale(5)}}>
           <Image
-            source={item.icon}
+            source={Icons.Notification5}
             resizeMode="contain"
             style={{
               height: moderateScale(21),
@@ -77,8 +89,15 @@ const Notification = ({navigation}) => {
       </View>
       {/* -----> Main Component <----- */}
       <View style={{flex: 1}}>
+        <View style={[StyleSheet.absoluteFill, styles.inMiddle]}>
+          <ActivityIndicator
+            animating={mainLoading}
+            size={moderateScale(40)}
+            color={'blue'}
+          />
+        </View>
         <FlatList
-          data={NotificationData}
+          data={notificationData}
           renderItem={renderItem}
           contentContainerStyle={styles.contentContainerStyle}
           showsVerticalScrollIndicator={false}
@@ -134,4 +153,5 @@ const styles = StyleSheet.create({
     color: Colors.gray[900],
     marginVertical: verticalScale(5),
   },
+  inMiddle: {justifyContent: 'center', zIndex: 1},
 });
