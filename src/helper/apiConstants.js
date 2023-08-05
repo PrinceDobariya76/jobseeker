@@ -23,7 +23,8 @@ export const apiConst = {
   jobDetails: jobId => `${BASE_URL}api/job-seeker/jobs/${jobId}`,
   cancelJobForClinic: jobId => `${BASE_URL}api/job-seeker/jobs/${jobId}/cancel`, //put
 
-  getShifts: pageCount => `${BASE_URL}api/job-seeker/shifts?page=${pageCount}`,
+  getShifts: (pageCount, date) =>
+    `${BASE_URL}api/job-seeker/shifts?page=${pageCount}&date=${date}`,
   cancelShifts: shiftId => `${BASE_URL}api/job-seeker/shifts/${shiftId}/cancel`, //PUT
   sendInvoiceToShiftClinic: shiftId =>
     `${BASE_URL}api/job-seeker/shifts/${shiftId}/invoices/send`, //POST

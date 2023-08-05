@@ -58,36 +58,6 @@ const getDateFromDateAndHour = (userDate, userTime) => {
   );
 };
 
-const getHour = (userDate, userTime) => {
-  const dateArray = userDate?.split('/');
-  const timeSplittedArray = userTime?.split(':');
-  const isAM = timeSplittedArray?.[1]?.slice(2)?.toLowerCase() === 'am';
-  const timeArray = timeSplittedArray?.map((item, index) => {
-    if (index === 0) {
-      if (isAM) {
-        return item;
-      } else {
-        return (Number(item) + 12).toString();
-      }
-    }
-    return item.slice(0, 2);
-  });
-
-  const targetDate = new Date(
-    dateArray?.[2],
-    (Number(dateArray?.[1]) - 1).toString(),
-    dateArray?.[0],
-    timeArray?.[0],
-    timeArray?.[1],
-  );
-
-  const currentDate = new Date();
-
-  const timeDiff = targetDate.getTime() - currentDate.getTime();
-
-  return Math.floor(timeDiff / (1000 * 60 * 60));
-};
-
 const hourDiff = (startDate, startTime, endDate, endTime) => {
   const timeDiff =
     getDateFromDateAndHour(endDate, endTime).getTime() -
@@ -112,20 +82,14 @@ const Shifts = ({navigation}) => {
     },
   ];
   const [openReviewModal, setOpenReviewModal] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(true);
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
   const [jobData, setJobData] = useState(JobList);
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
   );
-  const [endDate, setEndDate] = useState(
-    moment(new Date()).format('MMM DD,YYYY'),
-  );
   const [selectedStartDate, setSelectedStartDate] = useState(
-    moment(new Date()).format('MMM DD,YYYY'),
-  );
-  const [selectedEndDate, setSelectedEndDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
   );
   const showDatePicker = () => {
@@ -170,19 +134,10 @@ const Shifts = ({navigation}) => {
 
   const selectdDate = date => {
     if (date !== null) {
-      if (!startDate) {
-        setStartDate(moment(date).format('MMM DD,YYYY'));
-        setSelectedStartDate(date);
-      } else if (!endDate) {
-        setSelectedEndDate(date);
-        setEndDate(moment(date).format('MMM DD,YYYY'));
-        setDatePickerVisibility(!isDatePickerVisible);
-      } else {
-        setStartDate(moment(date).format('MMM DD,YYYY'));
-        setSelectedStartDate(date);
-        setEndDate('');
-        setSelectedEndDate('');
-      }
+      setStartDate(moment(date).format('MMM DD,YYYY'));
+      setSelectedStartDate(date);
+      setDatePickerVisibility(!isDatePickerVisible);
+      getShifts(moment(date).format('YYYY-MM-DD'));
     } else {
       // console.log('Invalid Date :::');
     }
@@ -191,16 +146,16 @@ const Shifts = ({navigation}) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      getShifts();
+    if (!isFocused && !isDatePickerVisible) {
+      setDatePickerVisibility(true);
     }
-  }, [isFocused]);
+  }, [isDatePickerVisible, isFocused]);
 
-  const getShifts = async () => {
+  const getShifts = async formattedDate => {
     setMainLoading(true);
     makeAPIRequest({
       method: GET,
-      url: apiConst.getShifts(1),
+      url: apiConst.getShifts(1, formattedDate),
       token: true,
     })
       .then(response => {
@@ -287,7 +242,10 @@ const Shifts = ({navigation}) => {
       setLoading(true);
       return makeAPIRequest({
         method: GET,
-        url: apiConst.getShifts(currentPage),
+        url: apiConst.getShifts(
+          currentPage,
+          moment(selectedStartDate).format('YYYY-MM-DD'),
+        ),
         token: true,
       })
         .then(response => {
@@ -339,8 +297,6 @@ const Shifts = ({navigation}) => {
             <Text style={styles.date_text}>
               {startDate == '' ? 'select Date' : startDate}
             </Text>
-            <Image source={Icons.Dote} style={{marginLeft: moderateScale(5)}} />
-            <Text style={styles.date_text}>{endDate}</Text>
           </TouchableOpacity>
           <View>
             <Text style={styles.openJob_text}>
@@ -351,12 +307,8 @@ const Shifts = ({navigation}) => {
         </View>
         {isDatePickerVisible && (
           <CalendarPicker
-            multipleDates={[startDate, endDate]}
-            allowRangeSelection={true}
             selectedStartDate={selectedStartDate}
-            selectedEndDate={selectedEndDate}
             onDateChange={selectdDate}
-            // minDate={new Date()}
             selectedDayTextColor="#FFFFFF"
             selectedRangeStyle={{backgroundColor: Colors.blue[500]}}
             selectedRangeStartStyle={{backgroundColor: Colors.blue[500]}}
@@ -368,45 +320,47 @@ const Shifts = ({navigation}) => {
           onPress={showDatePicker}
         />
       </View>
-      {totalShift == 0 ? (
-        <View style={styles.noDataContainer}>
-          <Text style={styles.noDataFound}>no data found</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={shiftData}
-          showsVerticalScrollIndicator={false}
-          onEndReached={() => !onEndReachedCalled && !loading && onEndReached()}
-          onEndReachedThreshold={0.1}
-          onMomentumScrollBegin={() => setOnEndReachedCalled(false)}
-          renderItem={({item, index}) => {
-            return (
-              <>
-                <JobilstComp
-                  index={index}
-                  item={item}
-                  lastView={'Shift'}
-                  arraylength={JobList.length - 1}
-                  status={'completed'}
-                  send_invoice={() => {
-                    setShistDetail(item);
-                    setHourlyRate((item?.shift?.price ?? '').slice(1, 3));
-                    refRBSheet2.current.open();
-                  }}
-                  reviewModall={() => onPressReview(item)}
-                  likePress={() => {
-                    SetOpenConfirmationModal(true);
-                    setIsItem(item);
-                  }}
-                  cancelShift={() => {
-                    refRBSheet1.current.open();
-                  }}
-                />
-              </>
-            );
-          }}
-        />
-      )}
+      <FlatList
+        data={shiftData}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flex: 1}}
+        ListEmptyComponent={
+          !isDatePickerVisible && (
+            <View style={styles.noDataContainer}>
+              <Text style={styles.noDataFound}>no data found</Text>
+            </View>
+          )
+        }
+        onEndReached={() => !onEndReachedCalled && !loading && onEndReached()}
+        onEndReachedThreshold={0.1}
+        onMomentumScrollBegin={() => setOnEndReachedCalled(false)}
+        renderItem={({item, index}) => {
+          return (
+            <>
+              <JobilstComp
+                index={index}
+                item={item}
+                lastView={'Shift'}
+                arraylength={JobList.length - 1}
+                status={'completed'}
+                send_invoice={() => {
+                  setShistDetail(item);
+                  setHourlyRate((item?.shift?.price ?? '').slice(1, 3));
+                  refRBSheet2.current.open();
+                }}
+                reviewModall={() => onPressReview(item)}
+                likePress={() => {
+                  SetOpenConfirmationModal(true);
+                  setIsItem(item);
+                }}
+                cancelShift={() => {
+                  refRBSheet1.current.open();
+                }}
+              />
+            </>
+          );
+        }}
+      />
       <RBSheet
         ref={refRBSheet2}
         closeOnDragDown={true}
