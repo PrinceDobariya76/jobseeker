@@ -1,26 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
+import {useIsFocused} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
+  ActivityIndicator,
   FlatList,
   Image,
-  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import Colors from '../theme/Colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
-import {Fonts} from '../theme';
-import {NotificationData} from '../theme/ConstantArray';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useIsFocused} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {apiConst, GET} from '../helper/apiConstants';
 import makeAPIRequest from '../helper/global';
-import {GET, apiConst} from '../helper/apiConstants';
-import {useState} from 'react';
-import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
+import {Fonts} from '../theme';
+import Colors from '../theme/Colors';
 import {Icons} from '../theme/icons';
+import {horizontalScale, moderateScale, verticalScale} from '../theme/scalling';
 
 const Notification = ({navigation}) => {
   const [mainLoading, setMainLoading] = useState(false);
@@ -44,6 +41,22 @@ const Notification = ({navigation}) => {
       });
   };
 
+  const getIcon = type => {
+    switch (type) {
+      case 'success':
+      case 'new':
+        return Icons.Notification5;
+      case 'error':
+        return Icons.Notification1;
+      case 'closed':
+        return Icons.Notification3;
+      case 'posted':
+        return Icons.Notification4;
+      default:
+        return Icons.Notification5;
+    }
+  };
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -57,7 +70,7 @@ const Notification = ({navigation}) => {
       <View style={styles.render_container}>
         <View style={{paddingTop: verticalScale(5)}}>
           <Image
-            source={Icons.Notification5}
+            source={getIcon(item?.type)}
             resizeMode="contain"
             style={{
               height: moderateScale(21),
