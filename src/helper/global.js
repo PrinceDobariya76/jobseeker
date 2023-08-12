@@ -43,7 +43,12 @@ const makeAPIRequest = async ({
 
     axios(options)
       .then(async response => {
-        if (response?.status === 200 || response?.status === 201) {
+        console.log(response.status, 'status');
+        if (
+          response?.status === 200 ||
+          response?.status === 201 ||
+          response?.status === 204
+        ) {
           resolve(response);
         } else {
           reject(response);

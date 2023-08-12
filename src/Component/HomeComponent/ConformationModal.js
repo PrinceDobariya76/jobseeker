@@ -12,6 +12,7 @@ import {Fonts} from '../../theme';
 import Colors from '../../theme/Colors';
 import {Images} from '../../theme/images';
 import {moderateScale} from '../../theme/scalling';
+import AcitvityLoader from './ActivityLoader';
 import YesNoButton from './YesNoButton';
 
 const ConformationModal = ({
@@ -22,12 +23,15 @@ const ConformationModal = ({
   no_text,
   yes_text,
   closeModal,
+  loading = false,
 }) => {
+  console.log(loading, 'loading loading');
   return (
     <Modal
       visible={openConfirmationModal}
       onRequestClose={NoButton}
       transparent={true}>
+      <AcitvityLoader visible={loading} />
       <TouchableWithoutFeedback style={{flex: 1}} onPress={closeModal}>
         <View style={styles.main_view}>
           <Image

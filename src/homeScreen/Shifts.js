@@ -107,6 +107,7 @@ const Shifts = ({navigation}) => {
   const [hourlyRate, setHourlyRate] = useState();
   const [hourWorked, setHourWorked] = useState();
   const [reviews, setReviews] = useState(reviewBox);
+  const [profileUrl, setProfileUrl] = useState('');
 
   const refRBSheet2 = useRef();
   const refRBSheet1 = useRef();
@@ -131,6 +132,28 @@ const Shifts = ({navigation}) => {
     setJobData([...temp]);
     SetOpenConfirmationModal(false);
   };
+
+  const getUserProfileDetails = async () => {
+    setMainLoading(true);
+    return makeAPIRequest({
+      method: GET,
+      url: apiConst.getUserProfileDetails,
+      token: true,
+    })
+      .then(response => {
+        setMainLoading(false);
+        setProfileUrl(response?.data?.data?.avatar ?? '');
+      })
+      .catch(() => {
+        setMainLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      getUserProfileDetails();
+    }
+  }, [isFocused]);
 
   const selectdDate = date => {
     if (date !== null) {
@@ -283,6 +306,7 @@ const Shifts = ({navigation}) => {
         text="Shifts"
         bellAction={() => navigation.navigate('Notification')}
         openProfile={() => navigation.navigate('MyProfile')}
+        profileUrl={profileUrl}
       />
       <AcitvityLoader visible={mainLoading} />
       <View style={{padding: moderateScale(20), backgroundColor: Colors.white}}>
@@ -774,7 +798,7 @@ const Shifts = ({navigation}) => {
         YesButton={() => likeOrdislikeJob()}
         header={
           isItem !== undefined && isItem.isFavourite === true
-            ? ' Do you want to remove this job from favorites?'
+            ? 'Do you want to remove this job from favorites?'
             : 'Do you want to add this job to favorites?'
         }
         no_text="No"

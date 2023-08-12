@@ -51,10 +51,11 @@ const getHour = (userDate, userTime) => {
 };
 
 const JobList = props => {
-  console.log(props, 'props');
-  const openGps = () => {
+  const openGps = ({latitude, longitude}) => {
+    console.log({latitude, longitude}, '{latitude, longitude}');
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
-    var url = scheme + `${'20.5937'},${'78.9629'}`;
+    // var url = scheme + `${latitude},${longitude}`;
+    var url = `${scheme}//0,0?q=` + `${latitude},${longitude}`;
     Linking.openURL(url);
   };
 
@@ -209,7 +210,12 @@ const JobList = props => {
                 justifyContent: 'center',
               },
             ]}
-            onPress={openGps}>
+            onPress={() =>
+              openGps({
+                latitude: props.item?.clinic?.latitude ?? '20.5937',
+                longitude: props.item?.clinic?.longitude ?? '78.9629',
+              })
+            }>
             <Image
               source={Icons.map_pin_line_fill}
               style={styles.map_pin_line_image}

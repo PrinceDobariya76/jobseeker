@@ -14,51 +14,76 @@ import {moderateScale} from '../theme/scalling';
 const Favorites = ({navigation}) => {
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
-  const [jobData, setJobData] = useState(JobList);
   const [favoritesData, setFavoritesData] = useState([]);
   const [mainLoading, setMainLoading] = useState(false);
+  const [profileUrl, setProfileUrl] = useState('');
 
-  const removeFavorites = async id => {
+  const removeFavorites = async () => {
     setMainLoading(true);
-    console.log('pin_code123');
     return makeAPIRequest({
       method: DELETE,
-      url: apiConst.removeFavorites(id),
+      url: apiConst.removeFavorites(isItem.id),
+      token: true,
+    })
+      .then(() => {
+        setMainLoading(false);
+        SetOpenConfirmationModal(false);
+        setFavoritesData(favoritesData.filter(item => item.id !== isItem.id));
+      })
+      .catch(error => {
+        setMainLoading(false);
+        console.log('error', error.response.data);
+      });
+  };
+
+  // const likeOrdislikeJob = async () => {
+  //   let temp = favoritesData;
+
+  //   temp.map(async (mapItem, mapIndex) => {
+  //     if (mapItem.id === isItem.id) {
+  //       await removeFavorites(mapItem.id);
+  //       if (mapItem.isFavourite !== undefined) {
+  //         if (mapItem.isFavourite === true) {
+  //           mapItem.isFavourite = false;
+  //         } else {
+  //           mapItem.isFavourite = true;
+  //         }
+  //       } else {
+  //         return mapItem;
+  //       }
+  //       //  else {
+  //       //   temp[mapIndex] = {...mapItem, isFavourite: true};
+  //       // }
+  //     }
+  //   });
+  //   console.log('temp :::', JSON.stringify(temp));
+  //   setJobData([...temp]);
+  //   SetOpenConfirmationModal(false);
+  // };
+
+  const isFocused = useIsFocused();
+
+  const getUserProfileDetails = async () => {
+    setMainLoading(true);
+    return makeAPIRequest({
+      method: GET,
+      url: apiConst.getUserProfileDetails,
       token: true,
     })
       .then(response => {
         setMainLoading(false);
-        console.log('responseREmove', response);
+        setProfileUrl(response?.data?.data?.avatar ?? '');
       })
-      .catch(error => {
-        setMainLoading(false), console.log('error', error.response.data);
+      .catch(() => {
+        setMainLoading(false);
       });
   };
 
-  const likeOrdislikeJob = () => {
-    let temp = favoritesData;
-
-    temp.map((mapItem, mapIndex) => {
-      if (mapItem.id === isItem.id) {
-        removeFavorites(mapItem.id);
-        if (mapItem.isFavourite !== undefined) {
-          if (mapItem.isFavourite === true) {
-            mapItem.isFavourite = false;
-          } else {
-            mapItem.isFavourite = true;
-          }
-        }
-        //  else {
-        //   temp[mapIndex] = {...mapItem, isFavourite: true};
-        // }
-      }
-    });
-    console.log('temp :::', JSON.stringify(temp));
-    setJobData([...temp]);
-    SetOpenConfirmationModal(false);
-  };
-
-  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      getUserProfileDetails();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (isFocused) {
@@ -90,6 +115,7 @@ const Favorites = ({navigation}) => {
         text="Favorites"
         bellAction={() => navigation.navigate('Notification')}
         openProfile={() => navigation.navigate('MyProfile')}
+        profileUrl={profileUrl}
       />
       <AcitvityLoader visible={mainLoading} />
       {favoritesData.length == 0 ? (
@@ -102,7 +128,6 @@ const Favorites = ({navigation}) => {
           data={favoritesData}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => {
-            console.log('item', item);
             return (
               <FavouriteListDetail
                 index={index}
@@ -111,7 +136,8 @@ const Favorites = ({navigation}) => {
                 favoritescreen={true}
                 arraylength={favoritesData.length - 1}
                 likePress={() => {
-                  SetOpenConfirmationModal(true), setIsItem(item);
+                  SetOpenConfirmationModal(true);
+                  setIsItem(item);
                 }}
               />
             );
@@ -120,13 +146,9 @@ const Favorites = ({navigation}) => {
       )}
       <ConformationModal
         NoButton={() => SetOpenConfirmationModal(false)}
-        YesButton={() => likeOrdislikeJob()}
-        header={
-          // isItem !== undefined && isItem.isFavourite === true
-          //   ?
-          ' Do you want to remove this job from favorites?'
-          // : 'Do you want to add this job to favorites?'
-        }
+        YesButton={() => removeFavorites()}
+        header={'Do you want to remove this job from favorites?'}
+        loading={mainLoading}
         no_text="No"
         openConfirmationModal={openConfirmationModal}
         yes_text="Yes"
