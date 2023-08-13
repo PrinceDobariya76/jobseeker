@@ -25,7 +25,6 @@ const ConformationModal = ({
   closeModal,
   loading = false,
 }) => {
-  console.log(loading, 'loading loading');
   return (
     <Modal
       visible={openConfirmationModal}

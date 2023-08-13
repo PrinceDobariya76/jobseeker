@@ -32,8 +32,8 @@ export const apiConst = {
     `${BASE_URL}api/job-seeker/shifts/${shiftId}/review`, //POst
 
   getFavorites: `${BASE_URL}api/job-seeker/favorites`,
-  addFavorites: jobId => `${BASE_URL}api/job-seeker/favorites/job/${jobId}} `, //POST
-  removeFavorites: jobId => `${BASE_URL}api/job-seeker/favorites/${jobId}} `, //DELETE
+  addFavorites: jobId => `${BASE_URL}api/job-seeker/favorites/job/${jobId}`, //POST
+  removeFavorites: jobId => `${BASE_URL}api/job-seeker/favorites/${jobId}`, //DELETE
 
   getUserProfileDetails: `${BASE_URL}api/job-seeker/profile`, //get
   updateUserProfileDetails: `${BASE_URL}api/job-seeker/profile`, //post

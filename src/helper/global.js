@@ -14,14 +14,12 @@ const makeAPIRequest = async ({
     console.log(url, 'makeAPIRequest');
     let generatedToken;
     if (isNeedToRegenerateToken) {
-      console.log('oyy');
       generatedToken = await generateNewToken();
-      console.log(generatedToken, 'generatedToken');
     }
 
     let tokenID = await (generatedToken ??
       (await AsyncStorage.getItem('token')));
-    console.log(tokenID, 'tokenID');
+
     let apiHeader = token
       ? {
           'Content-Type': 'application/json',

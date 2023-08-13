@@ -22,7 +22,7 @@ const Favorites = ({navigation}) => {
     setMainLoading(true);
     return makeAPIRequest({
       method: DELETE,
-      url: apiConst.removeFavorites(isItem.id),
+      url: apiConst.removeFavorites(isItem?.job?.clinic?.id),
       token: true,
     })
       .then(() => {
@@ -32,34 +32,9 @@ const Favorites = ({navigation}) => {
       })
       .catch(error => {
         setMainLoading(false);
-        console.log('error', error.response.data);
+        console.log('error', error);
       });
   };
-
-  // const likeOrdislikeJob = async () => {
-  //   let temp = favoritesData;
-
-  //   temp.map(async (mapItem, mapIndex) => {
-  //     if (mapItem.id === isItem.id) {
-  //       await removeFavorites(mapItem.id);
-  //       if (mapItem.isFavourite !== undefined) {
-  //         if (mapItem.isFavourite === true) {
-  //           mapItem.isFavourite = false;
-  //         } else {
-  //           mapItem.isFavourite = true;
-  //         }
-  //       } else {
-  //         return mapItem;
-  //       }
-  //       //  else {
-  //       //   temp[mapIndex] = {...mapItem, isFavourite: true};
-  //       // }
-  //     }
-  //   });
-  //   console.log('temp :::', JSON.stringify(temp));
-  //   setJobData([...temp]);
-  //   SetOpenConfirmationModal(false);
-  // };
 
   const isFocused = useIsFocused();
 
@@ -104,7 +79,8 @@ const Favorites = ({navigation}) => {
         setFavoritesData(response.data.data);
       })
       .catch(error => {
-        setMainLoading(false), console.log('error', error);
+        setMainLoading(false);
+        console.log('error', error);
       });
   };
 
