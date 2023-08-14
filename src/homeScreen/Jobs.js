@@ -436,12 +436,13 @@ const Jobs = ({navigation}) => {
         YesButton={() => likeOrdislikeJob()}
         header={
           isItem !== undefined && isItem.favorite === true
-            ? ' Do you want to remove this job from favorites?'
+            ? 'Do you want to remove this job from favorites?'
             : 'Do you want to add this job to favorites?'
         }
         no_text="No"
         openConfirmationModal={openConfirmationModal}
         yes_text="Yes"
+        loading={mainLoading}
       />
       <ConformationModal
         NoButton={() => setOpenCancelModal(false)}
@@ -450,6 +451,7 @@ const Jobs = ({navigation}) => {
         no_text="No"
         openConfirmationModal={openCancelModal}
         yes_text="Yes"
+        loading={mainLoading}
       />
     </SafeAreaView>
   );

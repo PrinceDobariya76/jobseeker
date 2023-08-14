@@ -52,7 +52,6 @@ const getHour = (userDate, userTime) => {
 
 const JobList = props => {
   const openGps = ({latitude, longitude}) => {
-    console.log({latitude, longitude}, '{latitude, longitude}');
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
     // var url = scheme + `${latitude},${longitude}`;
     var url = `${scheme}//0,0?q=` + `${latitude},${longitude}`;
@@ -108,7 +107,7 @@ const JobList = props => {
                 : moderateScale(0),
           },
         ]}>
-        <Text style={styles.job_name_text}>{props.item.clinic.name}</Text>
+        <Text style={styles.job_name_text}>{props.item?.clinic?.name}</Text>
         <TouchableOpacity onPress={() => props.likePress()}>
           <Image
             source={
@@ -121,9 +120,12 @@ const JobList = props => {
       <View
         style={[
           styles.header_view,
-          {marginTop: moderateScale(10), alignItems: 'flex-start'},
+          {
+            marginTop: moderateScale(10),
+            alignItems: 'flex-start',
+          },
         ]}>
-        <View style={[styles.header_view, {flex: 0.25}]}>
+        <View style={[styles.header_view, {marginRight: verticalScale(5)}]}>
           <Image source={Icons.star} style={styles.star_image} />
           <Text style={styles.text}>
             {props.item.clinic.rating.average.toFixed(1)} (
@@ -258,11 +260,15 @@ const JobList = props => {
                 <Image source={Icons.clock} style={styles.clock_image} />
                 <Text style={styles.waiting_text}>Waiting for approval</Text>
               </View>
-              <TouchableOpacity
-                style={styles.cancel_button}
-                onPress={props.cancelModal}>
-                <Text style={styles.cancel_text}>Cancel</Text>
-              </TouchableOpacity>
+              {props?.item?.cancelled ? (
+                <Text style={[styles.semiregular_text, {}]}>cancelled</Text>
+              ) : (
+                <TouchableOpacity
+                  style={styles.cancel_button}
+                  onPress={props.cancelModal}>
+                  <Text style={styles.cancel_text}>Cancel</Text>
+                </TouchableOpacity>
+              )}
             </>
           ) : (
             <View style={{flexDirection: 'row'}}>
@@ -302,7 +308,11 @@ const JobList = props => {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={[styles.button_view, {justifyContent: 'space-between'}]}>
+          <View
+            style={[
+              styles.button_view,
+              {justifyContent: 'space-between', marginTop: moderateScale(3)},
+            ]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -334,37 +344,6 @@ const JobList = props => {
                 second_button_image={false}
               />
             </View>
-            {/* <TouchableOpacity
-                onPress={() => props.reviewModall()}
-                style={[
-                  styles.cancel_button,
-                  {
-                    backgroundColor: Colors.gray[200],
-                    // flex: 1,
-                    marginRight: moderateScale(5),
-                    paddingHorizontal: moderateScale(5),
-                  },
-                ]}>
-                <Text style={[styles.cancel_text, {color: Colors.black}]}>
-                  Review
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.cancel_button,
-                  {
-                    backgroundColor: Colors.sky_color,
-                    flex: 1,
-                    paddingHorizontal: moderateScale(0),
-
-                    padding: moderateScale(1),
-                  },
-                ]}
-                onPress={() => props.send_invoice()}>
-                <Text style={[styles.cancel_text, {color: Colors.white}]}>
-                  Send Invoice
-                </Text>
-              </TouchableOpacity> */}
           </View>
         )
       ) : null}
@@ -399,7 +378,7 @@ const styles = StyleSheet.create({
   header_view: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    // flex: 1,
   },
   job_name_text: {
     fontSize: moderateScale(16),
@@ -458,7 +437,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: moderateScale(15),
     marginBottom: moderateScale(10),
-    flex: 1,
+    // flex: 1,
   },
   clock_image: {
     width: moderateScale(15),
@@ -487,5 +466,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+  },
+  semiregular_text: {
+    color: Colors.gray[500],
+    fontFamily: Fonts.satoshi_bold,
+    fontSize: moderateScale(15),
   },
 });

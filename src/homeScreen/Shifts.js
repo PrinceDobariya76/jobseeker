@@ -175,6 +175,7 @@ const Shifts = ({navigation}) => {
   }, [isDatePickerVisible, isFocused]);
 
   const getShifts = async formattedDate => {
+    console.log(formattedDate, '<---formattedDate');
     setMainLoading(true);
     makeAPIRequest({
       method: GET,
@@ -182,6 +183,7 @@ const Shifts = ({navigation}) => {
       token: true,
     })
       .then(response => {
+        console.log(response, 'updayed response');
         setMainLoading(false);
         setTotalShift(response.data.data.meta.total);
         setShiftData(response.data.data.results);
@@ -226,10 +228,11 @@ const Shifts = ({navigation}) => {
       token: true,
       data: data,
     })
-      .then(response => {
+      .then(async response => {
         setMainLoading(false);
-        console.log('response', response.data);
+        console.log('response Done', response.data);
         setOpenReviewModal(false);
+        await getShifts(moment(selectedStartDate).format('YYYY-MM-DD'));
       })
       .catch(error => {
         setMainLoading(false);
@@ -289,11 +292,17 @@ const Shifts = ({navigation}) => {
     }
   };
 
+  console.log(shiftData[0], 'shistDetail?.clinic?.reviewByApplicant');
+
   const onPressReview = item => {
+    console.log(
+      item.clinic.reviewByApplicant,
+      ' item.clinic.reviewByApplicant',
+    );
     setShistDetail(item);
     setOpenReviewModal(true);
     setReviews(
-      item.clinic.reviewByApplicant.length === 0
+      item?.clinic?.reviewByApplicant?.length === 0
         ? reviewBox
         : item.clinic.reviewByApplicant,
     );
@@ -347,7 +356,6 @@ const Shifts = ({navigation}) => {
       <FlatList
         data={shiftData}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flex: 1}}
         ListEmptyComponent={
           !isDatePickerVisible && (
             <View style={styles.noDataContainer}>
@@ -804,6 +812,7 @@ const Shifts = ({navigation}) => {
         no_text="No"
         openConfirmationModal={openConfirmationModal}
         yes_text="Yes"
+        loading={mainLoading}
       />
     </SafeAreaView>
   );
