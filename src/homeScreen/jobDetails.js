@@ -370,8 +370,8 @@ const JobDetails = ({navigation, route}) => {
           <View style={styles.map_container}>
             <MapView
               region={{
-                latitude: 23.0235062,
-                longitude: 72.5323024,
+                latitude: Number(jobData?.clinic?.latitude ?? 23.0235062),
+                longitude: Number(jobData?.clinic?.longitude ?? 72.5323024),
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}
@@ -381,8 +381,8 @@ const JobDetails = ({navigation, route}) => {
               mapType={'standard'}>
               <Marker
                 coordinate={{
-                  latitude: 23.0235062,
-                  longitude: 72.5323024,
+                  latitude: Number(jobData?.clinic?.latitude ?? 23.0235062),
+                  longitude: Number(jobData?.clinic?.longitude ?? 72.5323024),
                 }}>
                 <View style={styles.map_marker_container}>
                   <View style={styles.map_marker_inner_view} />

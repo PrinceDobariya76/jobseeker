@@ -51,19 +51,13 @@ const getTokenExpiredStatus = tokenExpiresTime => {
 
 export const generateNewToken = async () => {
   let tokenExpireTime = await AsyncStorage.getItem('expiresAt');
-  console.log(tokenExpireTime, 'tokenExpiresTime');
-  console.log(new Date(), 'current Time');
   if (!tokenExpireTime) {
-    console.log('Hii');
     return null;
   }
 
   const isTokenExpired = getTokenExpiredStatus(tokenExpireTime);
 
-  console.log(isTokenExpired, 'isTokenExpired');
-
   if (isTokenExpired) {
-    console.log('OKL');
     return await makeAPIRequest({
       method: POST,
       url: apiConst.refreshToken,
@@ -71,7 +65,6 @@ export const generateNewToken = async () => {
       isNeedToRegenerateToken: false,
     })
       .then(async response => {
-        console.log('response_token', response.data.data.jwt.token);
         await AsyncStorage.setItem('token', response.data.data.jwt.token);
         await AsyncStorage.setItem(
           'expiresAt',
