@@ -99,13 +99,10 @@ const Login = ({navigation}) => {
   };
 
   const onPressGoogleIcon = async () => {
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
-      .then(r => console.log(r, 'rrrrr'))
-      .catch(e => console.log(e, 'eeeeee'));
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
 
-    const userInfo = await GoogleSignin.signIn()
-      .then(r => console.log(r, '<<<<rrrrr>>>>'))
-      .catch(e => console.log(e, '<<<<eeeeee>>>>'));
+    const userInfo = await GoogleSignin.signIn();
+
     console.log('userInfo =====>', userInfo);
     let fcmToken = await AsyncStorage.getItem('deviceToken');
 

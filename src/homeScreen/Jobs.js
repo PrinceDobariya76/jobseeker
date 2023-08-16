@@ -224,7 +224,7 @@ const Jobs = ({navigation}) => {
   };
 
   const onEndReachedOpen = async () => {
-    if (pageCount == true) {
+    if (pageCount === true) {
       setLoading(true);
       return makeAPIRequest({
         method: GET,

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AcitvityLoader from '../Component/HomeComponent/ActivityLoader';
 import {apiConst, GET} from '../helper/apiConstants';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
@@ -47,11 +48,14 @@ const Notification = ({navigation}) => {
       case 'new':
         return Icons.Notification5;
       case 'error':
+      case 'cancelled':
         return Icons.Notification1;
       case 'closed':
         return Icons.Notification3;
       case 'posted':
         return Icons.Notification4;
+      case 'completed':
+        return Icons.Notification2;
       default:
         return Icons.Notification5;
     }
@@ -102,13 +106,7 @@ const Notification = ({navigation}) => {
       </View>
       {/* -----> Main Component <----- */}
       <View style={{flex: 1}}>
-        <View style={[StyleSheet.absoluteFill, styles.inMiddle]}>
-          <ActivityIndicator
-            animating={mainLoading}
-            size={moderateScale(40)}
-            color={'blue'}
-          />
-        </View>
+        <AcitvityLoader visible={mainLoading} />
         <FlatList
           data={notificationData}
           renderItem={renderItem}

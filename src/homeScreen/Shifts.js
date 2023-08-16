@@ -374,7 +374,7 @@ const Shifts = ({navigation}) => {
                 item={item}
                 lastView={'Shift'}
                 arraylength={JobList.length - 1}
-                status={'completed'}
+                status={item?.shift?.completed ? 'completed' : 'InCompleted'}
                 send_invoice={() => {
                   setShistDetail(item);
                   setHourlyRate((item?.shift?.price ?? '').slice(1, 3));
@@ -386,6 +386,7 @@ const Shifts = ({navigation}) => {
                   setIsItem(item);
                 }}
                 cancelShift={() => {
+                  setShistDetail(item);
                   refRBSheet1.current.open();
                 }}
               />
