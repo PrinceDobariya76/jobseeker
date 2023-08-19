@@ -25,7 +25,7 @@ import JobilstComp from '../Component/HomeComponent/JobDetails';
 import MainHeader from '../Component/HomeComponent/MainHeader';
 import YesNoButton from '../Component/HomeComponent/YesNoButton';
 import {Utils} from '../ConstantLibrary/react-native-calendar-picker/CalendarPicker/Utils';
-import {apiConst, GET, POST, PUT} from '../helper/apiConstants';
+import {apiConst, DELETE, GET, POST, PUT} from '../helper/apiConstants';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
@@ -85,7 +85,7 @@ const Shifts = ({navigation}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(true);
   const [openConfirmationModal, SetOpenConfirmationModal] = useState(false);
   const [isItem, setIsItem] = useState();
-  const [jobData, setJobData] = useState(JobList);
+  // const [jobData, setJobData] = useState(JobList);
   const [startDate, setStartDate] = useState(
     moment(new Date()).format('MMM DD,YYYY'),
   );
@@ -112,25 +112,52 @@ const Shifts = ({navigation}) => {
   const refRBSheet2 = useRef();
   const refRBSheet1 = useRef();
 
-  const likeOrdislikeJob = () => {
-    let temp = jobData;
+  const addFavorites = async id => {
+    setMainLoading(true);
+    return makeAPIRequest({
+      method: POST,
+      url: apiConst.addFavorites(id),
+      token: true,
+    })
+      .then(response => {
+        setMainLoading(false);
+        setIsItem();
+        SetOpenConfirmationModal(false);
+        console.log('response', response.data);
+      })
+      .catch(error => {
+        setMainLoading(false);
+        SetOpenConfirmationModal(false);
+        console.log('error--', error);
+      });
+  };
 
-    temp.map((mapItem, mapIndex) => {
-      if (mapItem.id === isItem.id) {
-        if (mapItem.isFavourite !== undefined) {
-          if (mapItem.isFavourite === true) {
-            mapItem.isFavourite = false;
-          } else {
-            mapItem.isFavourite = true;
-          }
-        } else {
-          temp[mapIndex] = {...mapItem, isFavourite: true};
-        }
-      }
-    });
-    // console.log('temp :::', JSON.stringify(temp));
-    setJobData([...temp]);
-    SetOpenConfirmationModal(false);
+  const removeFavorites = async id => {
+    setMainLoading(true);
+    return makeAPIRequest({
+      method: DELETE,
+      url: apiConst.removeFavorites(id),
+      token: true,
+    })
+      .then(response => {
+        setMainLoading(false);
+        setIsItem();
+        SetOpenConfirmationModal(false);
+        console.log('responseREmoveb succees', response);
+      })
+      .catch(error => {
+        setMainLoading(false),
+          SetOpenConfirmationModal(false),
+          console.log('error123', error.response.data);
+      });
+  };
+
+  const likeOrdislikeJob = () => {
+    if (isItem.favorite) {
+      removeFavorites(isItem?.clinic?.id);
+    } else {
+      addFavorites(isItem.id);
+    }
   };
 
   const getUserProfileDetails = async () => {
@@ -183,7 +210,7 @@ const Shifts = ({navigation}) => {
       token: true,
     })
       .then(response => {
-        console.log(response, 'updayed response');
+        console.log(response.data.data.results, 'updayed response');
         setMainLoading(false);
         setTotalShift(response.data.data.meta.total);
         setShiftData(response.data.data.results);
@@ -212,6 +239,7 @@ const Shifts = ({navigation}) => {
       })
       .catch(error => {
         setMainLoading(false);
+        console.log(error.response.data, 'errorerror');
         // console.log('error', error.response.data);
       });
   };
@@ -253,13 +281,13 @@ const Shifts = ({navigation}) => {
     })
       .then(response => {
         setMainLoading(false);
-        // console.log('response', response.data);
+        console.log('response', response.data);
         setShistDetail({});
         refRBSheet1.current.close();
       })
       .catch(error => {
         setMainLoading(false);
-        // console.log('error', error.response.data);
+        console.log('error', error.response.data);
       });
   };
 
@@ -291,8 +319,6 @@ const Shifts = ({navigation}) => {
         });
     }
   };
-
-  console.log(shiftData[0], 'shistDetail?.clinic?.reviewByApplicant');
 
   const onPressReview = item => {
     console.log(
@@ -579,17 +605,18 @@ const Shifts = ({navigation}) => {
                 textAlign: 'justify',
                 marginTop: verticalScale(10),
               }}>
-              You are cancelling with less than 12 hrs left! Shiftable strives
-              to maintain balance in commitments. If you cancel now, your time
-              slot of
+              {
+                'You are cancelling with less than 12 hrs left! Shiftable strives to maintain balance in commitments. If you cancel now, your time slot of '
+              }
               <Text style={{fontFamily: Fonts.satoshi_bold}}>
-                2:30 pm - 6:30 pm
-                {/* {`${shistDetail.shift.startTime}-${shistDetail.shift.endTime}`} */}
+                {/* 2:30 pm - 6:30 pm */}
+                {`${shistDetail.shift.startTime} - ${shistDetail.shift.endTime}`}
               </Text>
-              will be blocked for
+              {' will be blocked for'}
               <Text style={{fontFamily: Fonts.satoshi_bold}}>1 hour</Text>.
-              During this you won’t be able to see any jobs which overlaps with
-              this time slot.
+              {
+                'During this you won’t be able to see any jobs which overlaps with this time slot.'
+              }
             </Text>
           </View>
           <View
@@ -807,8 +834,8 @@ const Shifts = ({navigation}) => {
         YesButton={() => likeOrdislikeJob()}
         header={
           isItem !== undefined && isItem.isFavourite === true
-            ? 'Do you want to remove this job from favorites?'
-            : 'Do you want to add this job to favorites?'
+            ? 'Do you want to remove this shift from favorites?'
+            : 'Do you want to add this shift to favorites?'
         }
         no_text="No"
         openConfirmationModal={openConfirmationModal}

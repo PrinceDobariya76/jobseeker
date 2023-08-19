@@ -52,10 +52,10 @@ const makeAPIRequest = async ({
         }
       })
       .catch(async error => {
-        errorMessage({message: error.response.data.message});
+        console.log(error.response.data, 'API Error');
+        errorMessage({message: error.response.data.errors.error});
 
         if (error.response && error.response.status === 401) {
-          console.log('hell');
           AsyncStorage.clear();
           navigateToLogin();
         }

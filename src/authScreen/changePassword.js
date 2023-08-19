@@ -27,7 +27,7 @@ const ChangePassword = ({navigation, route}) => {
   const [newPassword, setNewPassword] = useState('');
 
   const onSavePassword = async () => {
-    if (newPassword.length <= 8) {
+    if (newPassword.length < 8) {
       errorMessage({message: 'password minimum length should be 8'});
     } else {
       isLoading(true);

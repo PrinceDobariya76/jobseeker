@@ -45,12 +45,14 @@ const Login = ({navigation}) => {
   }, []);
 
   const onGetStartedPress = async () => {
-    if (userName == '') {
+    if (userName === '') {
       errorMessage({message: 'Please enter Email '});
     } else if (!validateEmail(userName)) {
       errorMessage({message: 'Please enter valid Email '});
-    } else if (password == '') {
-      errorMessage({message: 'Please enter Passowrd'});
+    } else if (password === '') {
+      errorMessage({message: 'Please enter Password'});
+    } else if (password.length < 8) {
+      errorMessage({message: 'Password minimum length should be 8'});
     } else {
       setLoading(true);
       let fcmToken = await AsyncStorage.getItem('deviceToken');

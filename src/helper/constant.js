@@ -1,11 +1,11 @@
-import {showMessage} from 'react-native-flash-message';
-import {moderateScale} from '../theme/scalling';
-import makeAPIRequest from './global';
-import {POST, apiConst} from './apiConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/routers';
-import {createRef, useNavigation} from 'react';
 import axios from 'axios';
+import {createRef} from 'react';
+import {showMessage} from 'react-native-flash-message';
+import {moderateScale} from '../theme/scalling';
+import {apiConst, POST} from './apiConstants';
+import makeAPIRequest from './global';
 
 export const navigationRef = createRef();
 

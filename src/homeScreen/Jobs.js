@@ -49,6 +49,8 @@ const Jobs = ({navigation}) => {
   const [pageCountAppliedJob, setPageCountAppliedJob] = useState(true);
   const [mainLoading, setMainLoading] = useState(false);
 
+  console.log(applyData, 'applyData -->');
+
   const showDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -95,7 +97,7 @@ const Jobs = ({navigation}) => {
 
   const likeOrdislikeJob = () => {
     if (isItem.favorite) {
-      removeFavorites(isItem.id);
+      removeFavorites(isItem?.clinic?.id);
     } else {
       addFavorites(isItem.id);
     }
@@ -297,7 +299,6 @@ const Jobs = ({navigation}) => {
         }}
         selectedButton={selectButton}
       />
-
       <>
         <View
           style={{padding: moderateScale(20), backgroundColor: Colors.white}}>
@@ -373,7 +374,6 @@ const Jobs = ({navigation}) => {
             data={applyData}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
-              console.log('item', item);
               return (
                 <>
                   <JobilstComp

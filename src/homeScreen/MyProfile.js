@@ -19,7 +19,11 @@ import ProfileBottomView from '../Component/HomeComponent/ProfileBottomView';
 import ProfilePincodeRadius from '../Component/HomeComponent/ProfilePincodeRadius';
 import YesNoButton from '../Component/HomeComponent/YesNoButton';
 import {apiConst, GET, POST} from '../helper/apiConstants';
-import {errorMessage, getLatitudeFromPincode} from '../helper/constant';
+import {
+  errorMessage,
+  getLatitudeFromPincode,
+  navigateWithReset,
+} from '../helper/constant';
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
@@ -167,10 +171,13 @@ const MyProfile = ({navigation}) => {
       url: apiConst.logout,
       token: true,
     })
-      .then(response => {
+      .then(async response => {
         setMainLoading(false);
-        AsyncStorage.clear();
-        navigation.navigate('Login');
+        await AsyncStorage.clear();
+        await navigation.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        });
       })
       .catch(error => {
         SetOpenConfirmationModalLogOut(false);

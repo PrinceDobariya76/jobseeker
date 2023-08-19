@@ -61,6 +61,7 @@ const ForgetPassword = ({navigation}) => {
           })
           .catch(error => {
             isLoading(false);
+            console.log(error, 'error');
           });
       }
     }

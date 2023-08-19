@@ -254,58 +254,70 @@ const JobList = props => {
         </View>
       ) : props.lastView === 'Appliedjobs' ? (
         <View style={[styles.button_view, {justifyContent: 'space-between'}]}>
-          {props?.item?.approved === 'unapproved' ? (
-            <>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={Icons.clock} style={styles.clock_image} />
-                <Text style={styles.waiting_text}>Waiting for approval</Text>
-              </View>
-              {props?.item?.cancelled ? (
-                <Text style={[styles.semiregular_text, {}]}>cancelled</Text>
-              ) : (
-                <TouchableOpacity
-                  style={styles.cancel_button}
-                  onPress={props.cancelModal}>
-                  <Text style={styles.cancel_text}>Cancel</Text>
-                </TouchableOpacity>
-              )}
-            </>
-          ) : (
-            <View style={{flexDirection: 'row'}}>
-              <Image source={Icons.check_green} style={styles.clock_image} />
-              <Text
-                style={[
-                  styles.waiting_text,
-                  {
-                    fontFamily: Fonts.satoshi_bold,
-                    color: Colors.green[400],
-                  },
-                ]}>
-                Completed
-              </Text>
-            </View>
-          )}
+          {
+            props?.item?.approved === 'unapproved' && (
+              <>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image source={Icons.clock} style={styles.clock_image} />
+                  <Text style={styles.waiting_text}>Waiting for approval</Text>
+                </View>
+                {props?.item?.cancelled ? (
+                  <Text style={[styles.semiregular_text, {}]}>cancelled</Text>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.cancel_button}
+                    onPress={props.cancelModal}>
+                    <Text style={styles.cancel_text}>Cancel</Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )
+            // : (
+            //   <View style={{flexDirection: 'row'}}>
+            //     <Image source={Icons.check_green} style={styles.clock_image} />
+            //     <Text
+            //       style={[
+            //         styles.waiting_text,
+            //         {
+            //           fontFamily: Fonts.satoshi_bold,
+            //           color: Colors.green[400],
+            //         },
+            //       ]}>
+            //       Completed
+            //     </Text>
+            //   </View>
+            // )
+          }
         </View>
-      ) : props.lastView === 'Shift' ? (
+      ) : //
+      props.lastView === 'Shift' ? (
         props.status !== 'completed' ? (
           <View style={[styles.button_view, {justifyContent: 'space-between'}]}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={Icons.clock} style={styles.clock_image} />
-              <Text
-                style={[
-                  styles.waiting_text,
-                  {fontFamily: Fonts.satoshi_bold, color: Colors.black},
-                ]}>
-                {`Starting in  ${remainHour < 0 ? 0 : remainHour} Hrs`}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.cancel_button}
-              onPress={() => {
-                props.cancelShift();
-              }}>
-              <Text style={styles.cancel_text}>Cancel</Text>
-            </TouchableOpacity>
+            {props?.item?.shift?.cancelled ? (
+              <View style={styles.cancelledContainer}>
+                <Text style={[styles.semiregular_text, {}]}>cancelled</Text>
+              </View>
+            ) : (
+              <>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image source={Icons.clock} style={styles.clock_image} />
+                  <Text
+                    style={[
+                      styles.waiting_text,
+                      {fontFamily: Fonts.satoshi_bold, color: Colors.black},
+                    ]}>
+                    {`Starting in  ${remainHour < 0 ? 0 : remainHour} Hrs`}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.cancel_button}
+                  onPress={() => {
+                    props.cancelShift();
+                  }}>
+                  <Text style={styles.cancel_text}>Cancel</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         ) : (
           <View
@@ -471,5 +483,9 @@ const styles = StyleSheet.create({
     color: Colors.gray[500],
     fontFamily: Fonts.satoshi_bold,
     fontSize: moderateScale(15),
+  },
+  cancelledContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
 });

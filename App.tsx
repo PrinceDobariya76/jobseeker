@@ -1,22 +1,20 @@
-/* eslint-disable prettier/prettier */
-import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import StackNavigation from './src/route/StackNavigation';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Platform, StatusBar} from 'react-native';
-import Colors from './src/theme/Colors';
-import FlashMessage from 'react-native-flash-message';
-import {AppState} from 'react-native';
-import {generateNewToken, navigationRef} from './src/helper/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {Platform, StatusBar} from 'react-native';
+import FlashMessage from 'react-native-flash-message';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {navigationRef} from './src/helper/constant';
+import StackNavigation from './src/route/StackNavigation';
+import Colors from './src/theme/Colors';
 
 const App = () => {
-  const myFunction = () => {
-    console.log('generateNewToken');
-    generateNewToken();
-  };
-  const interval = setInterval(myFunction, 20 * 60 * 1000);
+  // const myFunction = () => {
+  //   console.log('generateNewToken');
+  //   generateNewToken();
+  // };
+  // const interval = setInterval(myFunction, 20 * 60 * 1000);
 
   useEffect(() => {
     registerAppWithFCM();
