@@ -225,7 +225,7 @@ const Shifts = ({navigation}) => {
     setMainLoading(true);
     return makeAPIRequest({
       method: POST,
-      url: apiConst.sendInvoiceToShiftClinic(shistDetail.id),
+      url: apiConst.sendInvoiceToShiftClinic(shistDetail?.id),
       token: true,
       data: {
         hourlyRate: hourlyRate,
@@ -252,7 +252,7 @@ const Shifts = ({navigation}) => {
 
     return makeAPIRequest({
       method: POST,
-      url: apiConst.reviewShiftClinic(shistDetail.id),
+      url: apiConst.reviewShiftClinic(shistDetail?.id),
       token: true,
       data: data,
     })
@@ -275,7 +275,7 @@ const Shifts = ({navigation}) => {
     });
     return makeAPIRequest({
       method: PUT,
-      url: apiConst.cancelShifts(shistDetail.id),
+      url: apiConst.cancelShifts(shistDetail?.id),
       token: true,
       data: data,
     })
@@ -610,7 +610,7 @@ const Shifts = ({navigation}) => {
               }
               <Text style={{fontFamily: Fonts.satoshi_bold}}>
                 {/* 2:30 pm - 6:30 pm */}
-                {`${shistDetail.shift.startTime} - ${shistDetail.shift.endTime}`}
+                {`${shistDetail?.shift?.startTime} - ${shistDetail?.shift?.endTime}`}
               </Text>
               {' will be blocked for'}
               <Text style={{fontFamily: Fonts.satoshi_bold}}>1 hour</Text>.
