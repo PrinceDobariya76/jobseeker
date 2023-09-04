@@ -35,7 +35,11 @@ const StackNavigation = () => {
       />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="DentalStaffTab" component={DentalStaffTab} />
+      <Stack.Screen
+        name="DentalStaffTab"
+        component={DentalStaffTab}
+        options={{gestureEnabled: false}}
+      />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="MyProfile" component={MyProfile} />
