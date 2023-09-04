@@ -52,15 +52,15 @@ const makeAPIRequest = async ({
         }
       })
       .catch(async error => {
-        console.log(error.response.data, 'API Error');
-        errorMessage({message: error.response.data.errors.error});
+        console.log(error.response.status, 'API Error');
+        errorMessage({message: error.response.data.message});
 
-        if (error.response && error.response.status === 401) {
+        reject(error);
+
+        if (error.response.status === 401) {
           AsyncStorage.clear();
           navigateToLogin();
         }
-
-        reject(error);
       });
     return null;
   });

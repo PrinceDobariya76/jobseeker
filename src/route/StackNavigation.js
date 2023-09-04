@@ -28,7 +28,11 @@ const StackNavigation = () => {
       }}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Splashscreen1" component={Splashscreen1} />
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{gestureEnabled: false}}
+      />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="DentalStaffTab" component={DentalStaffTab} />

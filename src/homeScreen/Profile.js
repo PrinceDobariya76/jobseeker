@@ -34,7 +34,7 @@ import {
 import makeAPIRequest from '../helper/global';
 import {Fonts} from '../theme';
 import Colors from '../theme/Colors';
-import {educationData, profession} from '../theme/ConstantArray';
+import {educationData} from '../theme/ConstantArray';
 import {Icons} from '../theme/icons';
 import {moderateScale, verticalScale} from '../theme/scalling';
 
@@ -208,7 +208,7 @@ const Profile = ({navigation}) => {
         .then(response => {
           console.log(response, 'response');
           setMainLoading(false);
-          navigation.navigate('DentalStaffTab');
+          navigation.replace('DentalStaffTab');
         })
         .catch(error => {
           setMainLoading(false);
